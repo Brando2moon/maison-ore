@@ -332,8 +332,87 @@ h1, h2, h3, h4 { font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; }
 .chip-gold { border-color: var(--gold); color: var(--gold); }
 .chip-sky { border-color: var(--sky); color: var(--sky-deep); background: var(--sky-tint); }
 
+/* ---------- Mobile Hamburger ---------- */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px; height: 32px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+  color: var(--ink-70);
+  transition: color 0.2s ease;
+}
+.nav-hamburger:hover { color: var(--gold); }
+.nav-hamburger span {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transition: all 0.28s ease;
+  transform-origin: center;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* Mobile nav drawer */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 68px; left: 0; right: 0; bottom: 0;
+  background: var(--paper);
+  z-index: 49;
+  flex-direction: column;
+  padding: 32px var(--gutter);
+  gap: 0;
+  overflow-y: auto;
+  transform: translateY(-100%);
+  transition: transform 0.32s ease;
+  border-top: 1px solid var(--ink-12);
+}
+.mobile-nav.open {
+  transform: translateY(0);
+}
+.mobile-nav a {
+  display: block;
+  padding: 18px 0;
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-06);
+  transition: color 0.2s ease;
+}
+.mobile-nav a:hover { color: var(--gold); }
+.mobile-nav a.active { color: var(--gold); }
+.mobile-nav-foot {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.mobile-nav-foot a {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+  border-bottom: none;
+  padding: 8px 0;
+}
+
 @media (max-width: 900px) {
   .nav-links { display: none; }
-  .nav-inner { grid-template-columns: 1fr 1fr; }
+  .nav-inner { grid-template-columns: 1fr auto; }
+  .nav-hamburger { display: flex; }
+  .mobile-nav { display: flex; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-bottom { flex-direction: column; gap: 8px; }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
 }

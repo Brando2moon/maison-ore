@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -83,6 +83,17 @@
 </head>
 <body>
 
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="shop.html">Shop</a>
+  <a href="sell.html" class="active">Become a Vendor</a>
+  <a href="dashboard.html">Dashboard</a>
+  <div class="mobile-nav-foot">
+    <a href="dashboard.html">Sign In</a>
+  </div>
+</div>
 <!-- NAV -->
 <header class="nav">
   <div class="container nav-inner">
@@ -95,6 +106,9 @@
     </ul></nav>
     <div class="nav-actions">
       <a href="login.html" style="font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-70);">Sign In</a>
+          <button class="nav-hamburger" id="navHamburger" aria-label="Menu" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
 </header>
@@ -344,6 +358,12 @@
     // Show success
     document.getElementById('formContent').style.display = 'none';
     document.getElementById('successBox').style.display = 'block';
+  }
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    const btn = document.getElementById('navHamburger');
+    if (nav) nav.classList.toggle('open');
+    if (btn) btn.classList.toggle('open');
   }
 </script>
 </body>

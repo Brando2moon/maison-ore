@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -782,6 +782,12 @@
 
   const savedRole = localStorage.getItem("mo_role") || "vendor";
   setRole(savedRole);
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    const btn = document.getElementById('navHamburger');
+    if (nav) nav.classList.toggle('open');
+    if (btn) btn.classList.toggle('open');
+  }
 </script>
 
 </body>

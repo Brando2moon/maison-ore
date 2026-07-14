@@ -278,6 +278,17 @@
   </div>
 </div>
 
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="shop.html" class="active">Shop</a>
+  <a href="sell.html">Become a Vendor</a>
+  <a href="dashboard.html">Dashboard</a>
+  <div class="mobile-nav-foot">
+    <a href="dashboard.html">Sign In</a>
+  </div>
+</div>
+
 <!-- NAV -->
 <header class="nav">
   <div class="container nav-inner">
@@ -294,15 +305,12 @@
       </ul>
     </nav>
     <div class="nav-actions">
-      <button class="icon-btn" aria-label="Search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </button>
-      <button class="icon-btn" aria-label="Account">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-      </button>
       <button class="icon-btn" aria-label="Cart" onclick="openCart()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-2 10H8L6 6z"/><path d="M6 6 4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
         <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Menu" onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
       </button>
     </div>
   </div>
@@ -567,10 +575,21 @@
   function openCart() {
     document.getElementById('cartDrawer').classList.add('open');
     document.getElementById('cartOverlay').classList.add('open');
+    // close mobile nav if open
+    document.getElementById('mobileNav').classList.remove('open');
+    document.getElementById('navHamburger').classList.remove('open');
   }
   function closeCart() {
     document.getElementById('cartDrawer').classList.remove('open');
     document.getElementById('cartOverlay').classList.remove('open');
+  }
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    const btn = document.getElementById('navHamburger');
+    nav.classList.toggle('open');
+    btn.classList.toggle('open');
+    // close cart if open
+    closeCart();
   }
 
   // ---- SHOP LOGIC ----
