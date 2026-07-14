@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Order Confirmed — Maison Oré</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  .confirm-page { min-height: calc(100vh - 68px); display: flex; align-items: center; justify-content: center; padding: 80px var(--gutter); }
+  .confirm-card { max-width: 580px; width: 100%; text-align: center; }
+  .confirm-icon { width: 72px; height: 72px; border: 1px solid var(--gold); display: grid; place-items: center; margin: 0 auto 32px; }
+  .confirm-icon svg { width: 32px; height: 32px; stroke: var(--gold); stroke-width: 1.4; }
+  .confirm-card .eyebrow { margin-bottom: 16px; }
+  .confirm-card h1 { margin-bottom: 16px; }
+  .confirm-card .sub { color: var(--ink-70); font-size: 16px; line-height: 1.7; max-width: 420px; margin: 0 auto 40px; }
+  .order-number-box { background: var(--cream); border: 1px solid var(--gold); padding: 20px 32px; margin: 32px 0; display: inline-block; }
+  .order-number-box .label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .order-number-box .num { font-family: "JetBrains Mono", monospace; font-size: 22px; letter-spacing: 0.08em; color: var(--ink); }
+  .order-details { background: var(--paper); border: 1px solid var(--ink-12); padding: 24px 28px; text-align: left; margin: 32px 0; }
+  .order-details h3 { font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--ink-12); }
+  .detail-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--ink-06); }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .k { color: var(--ink-70); }
+  .detail-row .v { font-weight: 500; }
+  .confirm-actions { display: flex; gap: 14px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
+  .what-next { margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--ink-12); }
+  .what-next h3 { font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 24px; color: var(--ink-70); }
+  .next-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: left; }
+  .next-step { padding: 20px; border: 1px solid var(--ink-12); }
+  .next-step .step-num { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .next-step p { font-size: 13px; color: var(--ink-70); line-height: 1.5; margin-top: 4px; }
+  @media (max-width: 600px) { .next-steps { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand"><span class="brand-mark"></span>Maison Oré</a>
+    <nav><ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#shop">Shop</a></li>
+    </ul></nav>
+    <div class="nav-actions"></div>
+  </div>
+</header>
+
+<div class="confirm-page">
+  <div class="confirm-card">
+    <div class="confirm-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <span class="eyebrow">Order Confirmed</span>
+    <h1 class="h1">Your order has been placed.</h1>
+    <p class="sub">Thank you for your purchase. We'll send a confirmation email shortly, and your pieces will be carefully prepared for shipment.</p>
+
+    <div class="order-number-box">
+      <div class="label">Order Number</div>
+      <div class="num" id="orderNumber">ORD-XXXXXXXX</div>
+    </div>
+
+    <div class="order-details">
+      <h3>Order Summary</h3>
+      <div class="detail-row"><span class="k">Customer</span><span class="v" id="detailName">—</span></div>
+      <div class="detail-row"><span class="k">Order Total</span><span class="v" id="detailTotal">—</span></div>
+      <div class="detail-row"><span class="k">Status</span><span class="v" style="color:var(--gold);">Confirmed ✓</span></div>
+      <div class="detail-row"><span class="k">Estimated Delivery</span><span class="v">5–10 business days</span></div>
+    </div>
+
+    <div class="confirm-actions">
+      <a href="index.html" class="btn btn-primary">Continue Shopping <span class="arrow">→</span></a>
+      <a href="login.html" class="btn btn-ghost">View My Orders</a>
+    </div>
+
+    <div class="what-next">
+      <h3>What happens next</h3>
+      <div class="next-steps">
+        <div class="next-step">
+          <div class="step-num">Step 01</div>
+          <h4 class="h4">Confirmation Email</h4>
+          <p>You'll receive an email with your order details and tracking information within 24 hours.</p>
+        </div>
+        <div class="next-step">
+          <div class="step-num">Step 02</div>
+          <h4 class="h4">Vendor Preparation</h4>
+          <p>The maker is notified and begins preparing your pieces with care. Each item is individually packaged.</p>
+        </div>
+        <div class="next-step">
+          <div class="step-num">Step 03</div>
+          <h4 class="h4">White-Glove Delivery</h4>
+          <p>Your order ships via our trusted carriers with full insurance and tracking from atelier to door.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 Maison Oré. All work verified.</span>
+      <span>Privacy · Terms · Cookies</span>
+    </div>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const orderNum = params.get('order') || 'ORD-XXXXXXXX';
+  const total = params.get('total') || '0.00';
+  const name = params.get('name') || 'Valued Customer';
+
+  document.getElementById('orderNumber').textContent = orderNum;
+  document.getElementById('detailName').textContent = name;
+  document.getElementById('detailTotal').textContent = '$' + parseFloat(total).toLocaleString('en-US', { minimumFractionDigits: 2 });
+</script>
+</body>
+</html>

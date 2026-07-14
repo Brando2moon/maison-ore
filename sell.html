@@ -8,51 +8,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   /* ============ VENDOR SIGNUP ============ */
-
-  .sell-hero {
-    padding: 72px 0 56px;
-    border-bottom: 1px solid var(--ink-12);
-  }
-  .sell-hero-inner {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 80px;
-    align-items: end;
-  }
+  .sell-hero { padding: 72px 0 56px; border-bottom: 1px solid var(--ink-12); }
+  .sell-hero-inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: end; }
   .sell-hero h1 { margin-top: 24px; }
-  .sell-hero .lede {
-    margin-top: 24px;
-    font-size: 17px;
-    line-height: 1.7;
-    color: var(--ink-70);
-    max-width: 520px;
-  }
-  .sell-hero-side {
-    display: flex; flex-direction: column; gap: 16px;
-  }
-  .promise {
-    padding: 20px 24px;
-    background: var(--cream);
-    border-left: 2px solid var(--gold);
-  }
-  .promise .k {
-    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--gold);
-  }
-  .promise .v {
-    margin-top: 4px; font-size: 15px; letter-spacing: -0.005em;
-  }
+  .sell-hero .lede { margin-top: 24px; font-size: 17px; line-height: 1.7; color: var(--ink-70); max-width: 520px; }
+  .sell-hero-side { display: flex; flex-direction: column; gap: 16px; }
+  .promise { padding: 20px 24px; background: var(--cream); border-left: 2px solid var(--gold); }
+  .promise .k { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+  .promise .v { margin-top: 4px; font-size: 15px; letter-spacing: -0.005em; }
 
-  .sell-body {
-    padding: 72px 0 var(--stack-lg);
-  }
-  .sell-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 80px;
-  }
+  .sell-body { padding: 72px 0 var(--stack-lg); }
+  .sell-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; }
 
   /* Sidebar */
   .sell-side { position: sticky; top: 100px; align-self: start; }
@@ -60,481 +29,218 @@
   .sell-side h2 { margin-top: 12px; }
   .sell-side p { margin-top: 20px; color: var(--ink-70); line-height: 1.75; }
   .side-benefits { margin-top: 40px; }
-  .side-benefit {
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    gap: 20px;
-    padding: 24px 0;
-    border-top: 1px solid var(--ink-12);
-    align-items: start;
-  }
+  .side-benefit { display: grid; grid-template-columns: 40px 1fr; gap: 20px; padding: 24px 0; border-top: 1px solid var(--ink-12); align-items: start; }
   .side-benefit:last-child { border-bottom: 1px solid var(--ink-12); }
-  .side-benefit .num {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    color: var(--gold);
-    padding-top: 4px;
-  }
+  .side-benefit .num { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: 0.14em; color: var(--gold); padding-top: 4px; }
   .side-benefit h4 { font-size: 15px; font-weight: 500; letter-spacing: -0.005em; }
   .side-benefit p { margin-top: 6px; font-size: 13px; color: var(--ink-70); line-height: 1.6; }
 
-  /* Form */
-  .form-card {
-    background: var(--paper);
-    border: 1px solid var(--ink-12);
-    padding: 48px;
-    position: relative;
-  }
-  .form-card::before {
-    content: "";
-    position: absolute;
-    top: -1px; left: -1px; width: 40px; height: 1px;
-    background: var(--gold);
-  }
-  .form-card::after {
-    content: "";
-    position: absolute;
-    top: -1px; left: -1px; width: 1px; height: 40px;
-    background: var(--gold);
-  }
-  .form-head {
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--ink-12);
-    margin-bottom: 40px;
-  }
-  .form-head .step {
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--gold);
-  }
+  /* Form Card */
+  .form-card { background: var(--paper); border: 1px solid var(--ink-12); padding: 48px; position: relative; }
+  .form-card::before { content: ""; position: absolute; top: -1px; left: -1px; width: 40px; height: 1px; background: var(--gold); }
+  .form-card::after { content: ""; position: absolute; top: -1px; left: -1px; width: 1px; height: 40px; background: var(--gold); }
+  .form-head { padding-bottom: 32px; border-bottom: 1px solid var(--ink-12); margin-bottom: 40px; }
+  .form-head .step { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
   .form-head h3 { margin-top: 8px; font-size: 24px; font-weight: 400; }
   .form-head p { margin-top: 8px; font-size: 14px; color: var(--ink-70); }
 
   .form-section { margin-bottom: 40px; }
-  .form-section-title {
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--ink-50);
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--ink-12);
-    margin-bottom: 24px;
-  }
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-bottom: 24px;
-  }
+  .form-section-title { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-50); padding-bottom: 12px; border-bottom: 1px solid var(--ink-12); margin-bottom: 24px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
   .field-row.single { grid-template-columns: 1fr; }
   .field { display: flex; flex-direction: column; gap: 8px; }
-  .field label {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-70);
-  }
+  .field label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-70); }
   .field label .req { color: var(--gold); }
-  .field input, .field select, .field textarea {
-    border: none;
-    border-bottom: 1px solid var(--ink-12);
-    padding: 12px 0;
-    background: transparent;
-    font-size: 15px;
-    color: var(--ink);
-    transition: border-color 0.2s ease;
-  }
+  .field input, .field select, .field textarea { border: none; border-bottom: 1px solid var(--ink-12); padding: 12px 0; background: transparent; font-size: 15px; color: var(--ink); transition: border-color 0.2s ease; font-family: var(--font); }
   .field input::placeholder, .field textarea::placeholder { color: var(--ink-30); }
-  .field input:focus, .field select:focus, .field textarea:focus {
-    outline: none;
-    border-bottom-color: var(--gold);
-  }
-  .field textarea { resize: vertical; min-height: 100px; font-family: inherit; }
-  .field select { cursor: pointer; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-bottom-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 100px; }
+  .field select { cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230B1F3A' stroke-width='1.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 4px center; }
 
-  .field .hint {
-    font-size: 11px;
-    color: var(--ink-50);
-    letter-spacing: 0.02em;
-    text-transform: none;
-    font-family: inherit;
-  }
+  .form-agree { display: flex; gap: 12px; align-items: flex-start; padding: 16px 0; border-top: 1px solid var(--ink-12); margin-bottom: 32px; }
+  .form-agree input[type="checkbox"] { margin-top: 3px; accent-color: var(--gold); width: 16px; height: 16px; flex-shrink: 0; }
+  .form-agree label { font-size: 13px; color: var(--ink-70); line-height: 1.6; cursor: pointer; }
+  .form-agree a { color: var(--gold); border-bottom: 1px solid var(--gold-soft); }
+  .form-submit { width: 100%; padding: 18px; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: all 0.24s; font-family: var(--font); }
+  .form-submit:hover { background: transparent; color: var(--ink); border-color: var(--gold); }
+  .form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* Radio group */
-  .radio-group {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  .radio-group label {
-    padding: 14px 16px;
-    border: 1px solid var(--ink-12);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-70);
-    background: var(--paper);
-  }
-  .radio-group label:hover { border-color: var(--gold); color: var(--gold); }
-  .radio-group input { display: none; }
-  .radio-group input:checked + span { color: var(--ink); }
-  .radio-group input:checked ~ * { color: var(--ink); }
-  .radio-group label:has(input:checked) {
-    border-color: var(--ink);
-    background: var(--cream);
-    color: var(--ink);
-  }
-  .radio-dot {
-    width: 12px; height: 12px;
-    border: 1px solid var(--ink-30);
-    border-radius: 50%;
-    display: grid; place-items: center;
-    flex-shrink: 0;
-  }
-  .radio-group label:has(input:checked) .radio-dot {
-    border-color: var(--gold);
-  }
-  .radio-group label:has(input:checked) .radio-dot::after {
-    content: "";
-    width: 6px; height: 6px;
-    background: var(--gold);
-    border-radius: 50%;
-  }
-
-  /* Checkbox */
-  .check-row {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    padding: 16px 0;
-  }
-  .check {
-    width: 18px; height: 18px;
-    border: 1px solid var(--ink-30);
-    display: grid; place-items: center;
-    flex-shrink: 0;
-    cursor: pointer;
-    background: var(--paper);
-    margin-top: 1px;
-    transition: all 0.2s ease;
-  }
-  .check.checked {
-    background: var(--ink);
-    border-color: var(--ink);
-  }
-  .check.checked::after {
-    content: "";
-    width: 8px; height: 4px;
-    border-left: 1.5px solid var(--gold-soft);
-    border-bottom: 1.5px solid var(--gold-soft);
-    transform: rotate(-45deg) translate(1px, -1px);
-  }
-  .check-row .label {
-    font-size: 13px;
-    color: var(--ink-70);
-    line-height: 1.6;
-  }
-  .check-row .label a { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 1px; }
-
-  .form-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 32px;
-    border-top: 1px solid var(--ink-12);
-    margin-top: 40px;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  .form-footer .note {
-    font-size: 12px;
-    color: var(--ink-50);
-    max-width: 320px;
-    line-height: 1.5;
-  }
-
-  /* Success state */
-  .success-panel {
-    display: none;
-    text-align: center;
-    padding: 80px 40px;
-  }
-  .success-panel.on { display: block; }
-  .success-panel .mark {
-    width: 64px; height: 64px;
-    border: 1px solid var(--gold);
-    display: inline-grid; place-items: center;
-    margin-bottom: 24px;
-  }
-  .success-panel .mark svg { width: 28px; height: 28px; stroke: var(--gold); stroke-width: 1.4; fill: none; }
-  .success-panel h3 { font-size: 32px; font-weight: 300; letter-spacing: -0.02em; }
-  .success-panel p { margin-top: 16px; color: var(--ink-70); max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
-  .success-panel .ref {
-    display: inline-block;
-    margin-top: 24px;
-    padding: 8px 16px;
-    font-family: "JetBrains Mono", monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    background: var(--cream);
-    color: var(--gold);
-    border: 1px solid var(--gold);
-  }
+  .error-msg { color: #c0392b; font-size: 13px; padding: 10px 14px; background: #fdf0ef; border: 1px solid #f5c6c2; margin-bottom: 24px; display: none; }
+  .success-box { display: none; text-align: center; padding: 56px 40px; }
+  .success-box .success-icon { width: 64px; height: 64px; border: 1px solid var(--gold); display: grid; place-items: center; margin: 0 auto 24px; }
+  .success-box .success-icon svg { width: 28px; height: 28px; stroke: var(--gold); stroke-width: 1.4; }
+  .success-box h3 { font-size: 22px; font-weight: 400; margin-bottom: 14px; }
+  .success-box p { color: var(--ink-70); line-height: 1.7; margin-bottom: 32px; }
 
   @media (max-width: 1000px) {
-    .sell-hero-inner, .sell-grid { grid-template-columns: 1fr; gap: 40px; }
+    .sell-grid { grid-template-columns: 1fr; }
+    .sell-hero-inner { grid-template-columns: 1fr; }
     .sell-side { position: static; }
-    .form-card { padding: 32px 24px; }
     .field-row { grid-template-columns: 1fr; }
-    .radio-group { grid-template-columns: 1fr; }
+    .form-card { padding: 32px 24px; }
   }
 </style>
 </head>
 <body>
 
-
 <!-- NAV -->
 <header class="nav">
   <div class="container nav-inner">
-    <a href="index.html" class="brand">
-      <span class="brand-mark"></span>
-      Maison Oré
-    </a>
-    <nav>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="sell.html" class="active">Become a Vendor</a></li>
-        <li><a href="dashboard.html">Dashboard</a></li>
-      </ul>
-    </nav>
+    <a href="index.html" class="brand"><span class="brand-mark"></span>Maison Oré</a>
+    <nav><ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#shop">Shop</a></li>
+      <li><a href="sell.html" class="active">Become a Vendor</a></li>
+      <li><a href="vendor-login.html">Vendor Login</a></li>
+    </ul></nav>
     <div class="nav-actions">
-      <a href="dashboard.html" style="font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-70);">Vendor Login →</a>
+      <a href="login.html" style="font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-70);">Sign In</a>
     </div>
   </div>
 </header>
 
-<!-- Hero -->
+<!-- HERO -->
 <section class="sell-hero">
   <div class="container sell-hero-inner">
     <div>
-      <span class="eyebrow">For Makers &amp; Houses</span>
-      <h1 class="display" style="font-size: clamp(40px, 5.5vw, 76px);">Sell where<br>your work belongs.</h1>
-      <p class="lede">
-        Apply to join a marketplace built for makers, not middlemen. We handle curation, provenance, storytelling, and white-glove fulfillment — you focus on the work.
-      </p>
+      <span class="eyebrow">For Makers & Ateliers</span>
+      <h1 class="h1">Sell where your work belongs.</h1>
+      <p class="lede">Maison Oré is a curated platform for exceptional makers. We handle discovery, verification, and white-glove fulfillment. You focus on the craft.</p>
     </div>
     <div class="sell-hero-side">
-      <div class="promise">
-        <div class="k">Commission</div>
-        <div class="v">12% flat — no listing fees, ever.</div>
-      </div>
-      <div class="promise">
-        <div class="k">Payout</div>
-        <div class="v">Within 48 hours of the sale clearing.</div>
-      </div>
-      <div class="promise">
-        <div class="k">Curation</div>
-        <div class="v">Every application reviewed by a human. No algorithms.</div>
-      </div>
+      <div class="promise"><div class="k">Commission</div><div class="v">12% — the fairest in luxury commerce.</div></div>
+      <div class="promise"><div class="k">Payout</div><div class="v">Within 48 hours of each confirmed sale.</div></div>
+      <div class="promise"><div class="k">Access</div><div class="v">14,000+ pre-qualified collectors worldwide.</div></div>
     </div>
   </div>
 </section>
 
-<!-- Body: sidebar + form -->
+<!-- BODY -->
 <section class="sell-body">
   <div class="container sell-grid">
-    <aside class="sell-side">
-      <span class="eyebrow">The Process</span>
-      <h2 class="h2">Considered, deliberate, human.</h2>
-      <p>Our team reads every application. If your work fits Maison Oré, we visit your atelier. If it doesn't, we tell you honestly. Either way, you'll hear from a person, not a form letter.</p>
 
+    <!-- Left: Info -->
+    <div class="sell-side">
+      <span class="eyebrow">The Process</span>
+      <h2 class="h2">How it works</h2>
+      <p>We review every application personally. If your work is a strong fit for our collectors, you'll hear from our curation team within 48 hours.</p>
       <div class="side-benefits">
         <div class="side-benefit">
-          <div class="num">01</div>
+          <span class="num">01</span>
           <div>
-            <h4>Submit your application</h4>
-            <p>Tell us about your practice, your work, and the pieces you'd like to list. Takes about 8 minutes.</p>
+            <h4>Apply</h4>
+            <p>Submit your application with business details, description, and primary category. No fee, no commitment.</p>
           </div>
         </div>
         <div class="side-benefit">
-          <div class="num">02</div>
+          <span class="num">02</span>
           <div>
-            <h4>Curation review</h4>
-            <p>Our editorial team reviews within 7 days. If we see a fit, we schedule an atelier visit or video walkthrough.</p>
+            <h4>Curation Review</h4>
+            <p>Our team reviews within 48 hours. If approved, you'll receive access to your Vendor Dashboard.</p>
           </div>
         </div>
         <div class="side-benefit">
-          <div class="num">03</div>
+          <span class="num">03</span>
           <div>
-            <h4>Onboarding &amp; first listing</h4>
-            <p>We photograph, write, and list your first three pieces together. You approve everything before it goes live.</p>
+            <h4>List & Sell</h4>
+            <p>Upload your products, set prices, and start selling to 14,000+ collectors across 38 countries.</p>
+          </div>
+        </div>
+        <div class="side-benefit">
+          <span class="num">04</span>
+          <div>
+            <h4>Get Paid</h4>
+            <p>Receive payouts within 48 hours of every confirmed sale. Transparent reporting in your dashboard.</p>
           </div>
         </div>
       </div>
-    </aside>
+    </div>
 
+    <!-- Right: Form -->
     <div>
-      <!-- FORM -->
-      <div class="form-card" id="formCard">
-        <div class="form-head">
-          <div class="step">Vendor Application · 2027 Intake</div>
-          <h3>Tell us about you and your work</h3>
-          <p>All fields marked with <span style="color:var(--gold);">✦</span> are required.</p>
+      <div class="form-card">
+        <!-- Success State -->
+        <div class="success-box" id="successBox">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>Application Submitted</h3>
+          <p>Thank you for applying to Maison Oré. We'll review your application and contact you within 48 hours to discuss next steps.</p>
+          <a href="index.html" class="btn btn-ghost">Return to Shop →</a>
         </div>
 
-        <form id="vendorForm" onsubmit="event.preventDefault(); handleSubmit();">
-          <!-- Section 1: You -->
-          <div class="form-section">
-            <div class="form-section-title">01 — About you</div>
-            <div class="field-row">
-              <div class="field">
-                <label>First name <span class="req">✦</span></label>
-                <input type="text" placeholder="Ines" required/>
-              </div>
-              <div class="field">
-                <label>Last name <span class="req">✦</span></label>
-                <input type="text" placeholder="Halden" required/>
-              </div>
-            </div>
-            <div class="field-row">
-              <div class="field">
-                <label>Email <span class="req">✦</span></label>
-                <input type="email" placeholder="ines@studiohalden.no" required/>
-              </div>
-              <div class="field">
-                <label>Phone</label>
-                <input type="tel" placeholder="+47 xxx xxx xxx"/>
-              </div>
-            </div>
+        <!-- Form -->
+        <div id="formContent">
+          <div class="form-head">
+            <div class="step">Vendor Application</div>
+            <h3>Tell us about your work</h3>
+            <p>Complete the form below to begin your application. All fields marked with <span style="color:var(--gold)">*</span> are required.</p>
           </div>
 
-          <!-- Section 2: Your House -->
+          <div id="errorMsg" class="error-msg"></div>
+
+          <!-- Business Info -->
           <div class="form-section">
-            <div class="form-section-title">02 — Your house</div>
-            <div class="field-row single">
-              <div class="field">
-                <label>Atelier or business name <span class="req">✦</span></label>
-                <input type="text" placeholder="Studio Halden" required/>
-              </div>
-            </div>
+            <div class="form-section-title">Business Information</div>
             <div class="field-row">
               <div class="field">
-                <label>City <span class="req">✦</span></label>
-                <input type="text" placeholder="Oslo" required/>
+                <label>Business / Atelier Name <span class="req">*</span></label>
+                <input type="text" id="businessName" placeholder="e.g. Studio Halden">
               </div>
               <div class="field">
-                <label>Country <span class="req">✦</span></label>
-                <select required>
-                  <option value="">Select a country</option>
-                  <option>Norway</option>
-                  <option>Japan</option>
-                  <option>France</option>
-                  <option>Italy</option>
-                  <option>Morocco</option>
-                  <option>United States</option>
-                  <option>Mexico</option>
-                  <option>Other</option>
+                <label>Primary Category <span class="req">*</span></label>
+                <select id="category">
+                  <option value="">Select a category</option>
+                  <option value="Ceramics">Ceramics</option>
+                  <option value="Textiles">Textiles</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Lighting">Lighting</option>
+                  <option value="Jewelry">Jewelry</option>
+                  <option value="Objets">Objets</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
             </div>
             <div class="field-row single">
               <div class="field">
-                <label>Website or portfolio <span class="req">✦</span></label>
-                <input type="url" placeholder="https://studiohalden.no" required/>
-                <span class="hint">Instagram, personal site, or online portfolio.</span>
+                <label>About Your Work <span class="req">*</span></label>
+                <textarea id="description" placeholder="Describe your making process, materials, inspiration, and what makes your work distinctive (minimum 100 characters)…"></textarea>
               </div>
             </div>
           </div>
 
-          <!-- Section 3: Your Work -->
+          <!-- Contact -->
           <div class="form-section">
-            <div class="form-section-title">03 — Your work</div>
-            <div class="field-row single">
+            <div class="form-section-title">Your Contact Details</div>
+            <div class="field-row">
               <div class="field">
-                <label>Primary category <span class="req">✦</span></label>
-                <div class="radio-group">
-                  <label><input type="radio" name="cat" checked/><span class="radio-dot"></span><span>Ceramics</span></label>
-                  <label><input type="radio" name="cat"/><span class="radio-dot"></span><span>Textiles</span></label>
-                  <label><input type="radio" name="cat"/><span class="radio-dot"></span><span>Objets</span></label>
-                  <label><input type="radio" name="cat"/><span class="radio-dot"></span><span>Furniture</span></label>
-                  <label><input type="radio" name="cat"/><span class="radio-dot"></span><span>Lighting</span></label>
-                  <label><input type="radio" name="cat"/><span class="radio-dot"></span><span>Jewelry</span></label>
-                </div>
+                <label>Contact Name <span class="req">*</span></label>
+                <input type="text" id="contactName" placeholder="Jane Smith">
+              </div>
+              <div class="field">
+                <label>Email Address <span class="req">*</span></label>
+                <input type="email" id="email" placeholder="jane@studiohalden.com">
               </div>
             </div>
             <div class="field-row">
               <div class="field">
-                <label>Years practicing <span class="req">✦</span></label>
-                <select required>
-                  <option value="">Select</option>
-                  <option>Less than 2 years</option>
-                  <option>2–5 years</option>
-                  <option>5–10 years</option>
-                  <option>10+ years</option>
-                  <option>Multi-generational</option>
-                </select>
+                <label>Password <span class="req">*</span></label>
+                <input type="password" id="password" placeholder="At least 6 characters">
               </div>
               <div class="field">
-                <label>Est. monthly output <span class="req">✦</span></label>
-                <select required>
-                  <option value="">Select</option>
-                  <option>1–5 pieces</option>
-                  <option>5–20 pieces</option>
-                  <option>20–50 pieces</option>
-                  <option>50+ pieces</option>
-                </select>
-              </div>
-            </div>
-            <div class="field-row single">
-              <div class="field">
-                <label>Tell us about your work <span class="req">✦</span></label>
-                <textarea placeholder="Describe your practice, your materials, and what makes your work distinct. Two or three paragraphs is perfect." required></textarea>
+                <label>Confirm Password <span class="req">*</span></label>
+                <input type="password" id="confirmPassword" placeholder="Repeat password">
               </div>
             </div>
           </div>
 
-          <!-- Section 4: Agreement -->
-          <div class="form-section" style="margin-bottom: 0;">
-            <div class="form-section-title">04 — Agreement</div>
-            <div class="check-row">
-              <div class="check checked" data-check="1"></div>
-              <div class="label">I understand Maison Oré charges a <strong style="color:var(--ink);">12% commission</strong> on completed sales, with no listing or membership fees. <a href="#">Read the full commission schedule</a></div>
-            </div>
-            <div class="check-row">
-              <div class="check checked" data-check="2"></div>
-              <div class="label">I agree to Maison Oré's <a href="#">Vendor Standards</a> and understand that all pieces are subject to provenance verification before listing.</div>
-            </div>
-            <div class="check-row">
-              <div class="check" data-check="3"></div>
-              <div class="label">Add me to the vendor newsletter for craft-industry news, curation notes, and quarterly intake announcements. (Optional)</div>
-            </div>
+          <!-- Terms -->
+          <div class="form-agree">
+            <input type="checkbox" id="termsCheck">
+            <label for="termsCheck">I agree to the <a href="#">Vendor Terms & Conditions</a> and <a href="#">Commission Schedule</a>. I understand my application will be reviewed within 48 hours.</label>
           </div>
 
-          <div class="form-footer">
-            <div class="note">By submitting, you agree to be contacted by our curation team within 7 business days.</div>
-            <button type="submit" class="btn btn-primary btn-lg">
-              Submit Application
-              <span class="arrow">→</span>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Success -->
-      <div class="form-card success-panel" id="success">
-        <div class="mark">
-          <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>
-        </div>
-        <span class="eyebrow" style="color: var(--gold);">Application Received</span>
-        <h3 style="margin-top:12px;">Thank you — your file is with our curation team.</h3>
-        <p>A member of the editorial team will read your application within 7 business days and respond personally, whether or not we can offer a spot in this intake. Your reference number is below — keep it for correspondence.</p>
-        <div class="ref">REF · MO-27-INTAKE-0247</div>
-        <div style="margin-top: 40px;">
-          <a href="index.html" class="btn btn-ghost">Return home</a>
+          <button class="form-submit" id="submitBtn" onclick="submitApplication()">Submit Application →</button>
         </div>
       </div>
     </div>
@@ -547,35 +253,11 @@
     <div class="footer-grid">
       <div>
         <div class="brand footer-brand"><span class="brand-mark"></span>Maison Oré</div>
-        <p class="footer-desc">A curated marketplace for objects of quiet consequence — verified at the source, delivered with care.</p>
+        <p class="footer-desc">A curated marketplace for objects of quiet consequence.</p>
       </div>
-      <div>
-        <h5>Shop</h5>
-        <ul>
-          <li><a href="shop.html">All Collections</a></li>
-          <li><a href="shop.html">Ceramics</a></li>
-          <li><a href="shop.html">Textiles</a></li>
-          <li><a href="shop.html">Objets</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Vendors</h5>
-        <ul>
-          <li><a href="sell.html">Become a Vendor</a></li>
-          <li><a href="dashboard.html">Vendor Login</a></li>
-          <li><a href="#">Vendor Standards</a></li>
-          <li><a href="#">Commission Schedule</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Maison</h5>
-        <ul>
-          <li><a href="#">Our Standard</a></li>
-          <li><a href="#">Provenance Team</a></li>
-          <li><a href="#">Journal</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </div>
+      <div><h5>For Vendors</h5><ul><li><a href="sell.html">Apply Now</a></li><li><a href="vendor-login.html">Vendor Login</a></li><li><a href="vendor-dashboard.html">Dashboard</a></li></ul></div>
+      <div><h5>Shop</h5><ul><li><a href="index.html#shop">All Collections</a></li><li><a href="index.html">Home</a></li></ul></div>
+      <div><h5>Account</h5><ul><li><a href="login.html">Sign In</a></li><li><a href="register.html">Register</a></li></ul></div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 Maison Oré. All work verified.</span>
@@ -584,18 +266,85 @@
   </div>
 </footer>
 
+<script src="config.js"></script>
 <script>
-  // Checkbox toggling
-  document.querySelectorAll(".check").forEach(c => {
-    c.addEventListener("click", () => c.classList.toggle("checked"));
-  });
+  async function submitApplication() {
+    const btn = document.getElementById('submitBtn');
+    const errEl = document.getElementById('errorMsg');
+    errEl.style.display = 'none';
 
-  function handleSubmit() {
-    document.getElementById("formCard").style.display = "none";
-    document.getElementById("success").classList.add("on");
-    window.scrollTo({ top: document.getElementById("success").offsetTop - 100, behavior: "smooth" });
+    const businessName = document.getElementById('businessName').value.trim();
+    const category = document.getElementById('category').value;
+    const description = document.getElementById('description').value.trim();
+    const contactName = document.getElementById('contactName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const terms = document.getElementById('termsCheck').checked;
+
+    if (!businessName || !category || !description || !contactName || !email || !password) {
+      errEl.textContent = 'Please fill in all required fields.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (description.length < 50) {
+      errEl.textContent = 'Please provide a more detailed description of your work (at least 50 characters).';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (password.length < 6) {
+      errEl.textContent = 'Password must be at least 6 characters.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (password !== confirm) {
+      errEl.textContent = 'Passwords do not match.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (!terms) {
+      errEl.textContent = 'Please agree to the terms and conditions before submitting.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    // Create auth user
+    const { data, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: contactName, role: 'customer' } } // starts as customer until approved
+    });
+
+    if (authError) {
+      errEl.textContent = authError.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Submit Application →';
+      return;
+    }
+
+    const userId = data.user?.id;
+
+    // Insert vendor application
+    if (userId) {
+      await supabase.from('vendor_applications').insert({
+        user_id: userId,
+        business_name: businessName,
+        contact_name: contactName,
+        email,
+        description,
+        category,
+        status: 'pending'
+      });
+    }
+
+    // Show success
+    document.getElementById('formContent').style.display = 'none';
+    document.getElementById('successBox').style.display = 'block';
   }
 </script>
-
 </body>
 </html>

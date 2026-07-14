@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vendor Sign In — Maison Oré</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body { background: var(--cream); }
+  .auth-page { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+  .auth-visual { background: var(--ink); position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 48px; overflow: hidden; }
+  .auth-visual::before { content: ""; position: absolute; top: -20%; right: -10%; width: 400px; height: 400px; border: 1px solid rgba(184,137,74,0.2); transform: rotate(45deg); }
+  .auth-visual::after { content: ""; position: absolute; bottom: 10%; left: 10%; width: 200px; height: 200px; border: 1px solid rgba(124,178,214,0.15); }
+  .auth-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--paper); }
+  .auth-brand .brand-mark { border-color: var(--gold-soft); }
+  .auth-brand .brand-mark::before { background: var(--gold-soft); }
+  .auth-quote blockquote { font-size: 22px; font-weight: 300; line-height: 1.5; color: var(--paper); letter-spacing: -0.01em; margin-bottom: 16px; }
+  .auth-quote cite { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-soft); font-style: normal; }
+  .vendor-perks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .perk { padding: 16px; border: 1px solid rgba(184,137,74,0.2); }
+  .perk .perk-val { font-size: 22px; font-weight: 300; color: var(--gold-soft); letter-spacing: -0.02em; }
+  .perk .perk-lbl { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(250,250,247,0.5); margin-top: 4px; }
+
+  .auth-form-wrap { display: flex; align-items: center; justify-content: center; padding: 48px; background: var(--paper); }
+  .auth-form-inner { width: 100%; max-width: 400px; }
+  .auth-form-inner .eyebrow { margin-bottom: 12px; }
+  .auth-form-inner h1 { margin-bottom: 8px; }
+  .auth-form-inner .sub { color: var(--ink-70); font-size: 14px; margin-bottom: 32px; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-70); }
+  .field input { padding: 13px 16px; border: 1px solid var(--ink-12); background: var(--paper); font-size: 14px; color: var(--ink); outline: none; transition: border-color 0.2s; font-family: var(--font); }
+  .field input:focus { border-color: var(--gold); }
+  .auth-submit { width: 100%; padding: 16px; font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); cursor: pointer; transition: all 0.24s; font-family: var(--font); margin-top: 8px; }
+  .auth-submit:hover { background: transparent; color: var(--ink); border-color: var(--gold); }
+  .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .auth-links { margin-top: 24px; text-align: center; display: flex; flex-direction: column; gap: 10px; }
+  .auth-links a { font-size: 13px; color: var(--ink-70); transition: color 0.2s; }
+  .auth-links a:hover { color: var(--gold); }
+  .auth-links .divider { color: var(--ink-30); font-size: 12px; }
+  .error-msg { color: #c0392b; font-size: 13px; padding: 10px 14px; background: #fdf0ef; border: 1px solid #f5c6c2; margin-bottom: 16px; display: none; }
+  .access-denied { color: #92400e; font-size: 13px; padding: 10px 14px; background: #fffbeb; border: 1px solid #fde68a; margin-bottom: 16px; display: none; }
+  @media (max-width: 800px) { .auth-visual { display: none; } .auth-page { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="auth-page">
+  <!-- Visual Side -->
+  <div class="auth-visual">
+    <a href="index.html" class="auth-brand"><span class="brand-mark"></span>Maison Oré</a>
+    <div class="auth-quote">
+      <blockquote>"Your craft deserves a platform as considered as the work itself."</blockquote>
+      <cite>— Maison Oré Vendor Program</cite>
+    </div>
+    <div class="vendor-perks">
+      <div class="perk"><div class="perk-val">12%</div><div class="perk-lbl">Commission only</div></div>
+      <div class="perk"><div class="perk-val">48hr</div><div class="perk-lbl">Payout on sale</div></div>
+      <div class="perk"><div class="perk-val">$4.2M</div><div class="perk-lbl">Paid to vendors YTD</div></div>
+      <div class="perk"><div class="perk-val">240+</div><div class="perk-lbl">Active vendors</div></div>
+    </div>
+  </div>
+
+  <!-- Form Side -->
+  <div class="auth-form-wrap">
+    <div class="auth-form-inner">
+      <span class="eyebrow">Vendor Portal</span>
+      <h1 class="h2">Welcome back</h1>
+      <p class="sub">Sign in to manage your products, orders, and earnings.</p>
+
+      <div id="errorMsg" class="error-msg"></div>
+      <div id="accessDenied" class="access-denied">This account does not have vendor access. <a href="sell.html" style="color:var(--gold);border-bottom:1px solid var(--gold);">Apply to become a vendor →</a></div>
+
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="vendor@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') signIn()">
+      </div>
+
+      <button class="auth-submit" id="submitBtn" onclick="signIn()">Sign In to Dashboard →</button>
+
+      <div class="auth-links">
+        <span class="divider">Not yet a vendor?</span>
+        <a href="sell.html">Apply to sell on Maison Oré →</a>
+        <a href="login.html">Customer sign-in →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+  supabase.auth.getSession().then(async ({ data: { session } }) => {
+    if (session) {
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+      if (profile && (profile.role === 'vendor' || profile.role === 'admin')) {
+        window.location.href = 'vendor-dashboard.html';
+      }
+    }
+  });
+
+  async function signIn() {
+    const btn = document.getElementById('submitBtn');
+    const errEl = document.getElementById('errorMsg');
+    const accessEl = document.getElementById('accessDenied');
+    errEl.style.display = 'none';
+    accessEl.style.display = 'none';
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+      errEl.textContent = 'Please enter your email and password.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Sign In to Dashboard →';
+      return;
+    }
+
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single();
+    if (!profile || (profile.role !== 'vendor' && profile.role !== 'admin')) {
+      accessEl.style.display = 'block';
+      await supabase.auth.signOut();
+      btn.disabled = false;
+      btn.textContent = 'Sign In to Dashboard →';
+      return;
+    }
+
+    window.location.href = 'vendor-dashboard.html';
+  }
+</script>
+</body>
+</html>

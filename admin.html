@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard — Maison Oré</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body { background: var(--cream); }
+  .dash-shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar { background: var(--ink); border-right: 1px solid rgba(255,255,255,0.08); padding: 28px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+  .sidebar-brand { display: flex; align-items: center; gap: 10px; padding-bottom: 28px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--paper); }
+  .sidebar-brand .brand-mark { border-color: var(--gold-soft); }
+  .sidebar-brand .brand-mark::before { background: var(--gold-soft); }
+  .admin-badge { display: inline-flex; padding: 3px 10px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; background: rgba(184,137,74,0.15); color: var(--gold-soft); border: 1px solid rgba(184,137,74,0.25); margin-top: 8px; }
+  .sidebar-user { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 8px; }
+  .sidebar-user .user-role { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-soft); }
+  .sidebar-user .user-name { font-size: 15px; font-weight: 500; margin-top: 4px; color: var(--paper); }
+  .sidebar-user .user-email { font-size: 12px; color: rgba(250,250,247,0.4); margin-top: 2px; }
+  .sidebar-nav { flex: 1; padding: 8px 0; }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; color: rgba(250,250,247,0.6); font-size: 13px; cursor: pointer; transition: all 0.18s; border: none; background: none; width: 100%; text-align: left; font-family: var(--font); margin-bottom: 2px; }
+  .nav-item:hover { color: var(--paper); background: rgba(255,255,255,0.06); }
+  .nav-item.active { color: var(--paper); background: rgba(255,255,255,0.08); border-left: 2px solid var(--gold-soft); }
+  .nav-item svg { width: 16px; height: 16px; stroke-width: 1.5; flex-shrink: 0; }
+  .sidebar-foot { padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .sidebar-foot a, .sidebar-foot button { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(250,250,247,0.4); padding: 8px 0; background: none; border: none; cursor: pointer; width: 100%; font-family: var(--font); }
+  .sidebar-foot a:hover, .sidebar-foot button:hover { color: var(--paper); }
+
+  /* Main */
+  .dash-main { padding: 40px 48px; }
+  .page-head { margin-bottom: 40px; }
+  .page-head h1 { font-size: 28px; font-weight: 300; letter-spacing: -0.02em; margin-top: 8px; }
+
+  /* Stats */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+  .stat-card { background: var(--paper); padding: 20px 24px; border: 1px solid var(--ink-06); }
+  .stat-card .stat-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-50); }
+  .stat-card .stat-value { font-size: 32px; font-weight: 300; letter-spacing: -0.03em; margin-top: 8px; }
+  .stat-card .stat-sub { font-size: 12px; color: var(--ink-50); margin-top: 4px; }
+  .stat-card.gold .stat-value { color: var(--gold); }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Table */
+  .table-wrap { background: var(--paper); border: 1px solid var(--ink-06); overflow-x: auto; margin-bottom: 24px; }
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th { background: var(--cream); padding: 12px 16px; text-align: left; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-50); font-weight: 500; border-bottom: 1px solid var(--ink-12); white-space: nowrap; }
+  .data-table td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--ink-06); vertical-align: middle; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--cream); }
+  .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .status-approved { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+  .status-pending { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+  .status-rejected { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+  .status-active { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+  .status-inactive { background: #fafafa; color: #6b7280; border: 1px solid #e5e7eb; }
+  .action-btns { display: flex; gap: 8px; }
+  .btn-approve { padding: 6px 12px; font-size: 11px; border: 1px solid #bbf7d0; background: #f0fdf4; cursor: pointer; color: #16a34a; font-family: var(--font); letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.2s; }
+  .btn-approve:hover { background: #16a34a; color: white; border-color: #16a34a; }
+  .btn-reject { padding: 6px 12px; font-size: 11px; border: 1px solid #fecaca; background: #fef2f2; cursor: pointer; color: #dc2626; font-family: var(--font); letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.2s; }
+  .btn-reject:hover { background: #dc2626; color: white; border-color: #dc2626; }
+  .btn-remove { padding: 6px 12px; font-size: 11px; border: 1px solid #fecaca; background: none; cursor: pointer; color: #dc2626; font-family: var(--font); letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.2s; }
+  .btn-remove:hover { background: #fef2f2; }
+  .table-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .table-toolbar h2 { font-size: 18px; font-weight: 400; }
+  .empty-state { padding: 48px 20px; text-align: center; color: var(--ink-50); }
+  .empty-state h3 { color: var(--ink-70); margin-bottom: 8px; }
+
+  /* Filter */
+  .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .filter-tab { padding: 8px 16px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--ink-12); background: var(--paper); cursor: pointer; font-family: var(--font); color: var(--ink-70); transition: all 0.2s; }
+  .filter-tab:hover, .filter-tab.active { border-color: var(--gold); color: var(--gold); background: var(--gold-tint); }
+
+  @media (max-width: 900px) {
+    .dash-shell { grid-template-columns: 1fr; }
+    .sidebar { height: auto; position: static; }
+    .dash-main { padding: 24px 16px; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dash-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-brand">
+      <span class="brand-mark"></span>
+      Maison Oré
+    </a>
+    <div class="sidebar-user">
+      <div class="user-role">Administrator</div>
+      <div class="user-name" id="sidebarName">—</div>
+      <div class="user-email" id="sidebarEmail">—</div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showPanel('overview', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <button class="nav-item" onclick="showPanel('vendors', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Vendors
+      </button>
+      <button class="nav-item" onclick="showPanel('products', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        Products
+      </button>
+      <button class="nav-item" onclick="showPanel('orders', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        Orders
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <a href="index.html">← Back to Shop</a>
+      <button onclick="signOut()">Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="dash-main">
+
+    <!-- OVERVIEW -->
+    <div class="panel active" id="panel-overview">
+      <div class="page-head">
+        <span class="eyebrow">Admin Panel</span>
+        <h1>Platform Overview</h1>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Vendors</div>
+          <div class="stat-value" id="statVendors">—</div>
+          <div class="stat-sub">Approved applications</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Products</div>
+          <div class="stat-value" id="statProducts">—</div>
+          <div class="stat-sub">Active listings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value" id="statOrders">—</div>
+          <div class="stat-sub">All time</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Platform Revenue</div>
+          <div class="stat-value" id="statRevenue">—</div>
+          <div class="stat-sub">Before commissions</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div>
+          <h2 style="font-size:16px; font-weight:500; margin-bottom:16px;">Pending Applications</h2>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Business</th><th>Category</th><th>Date</th><th></th></tr></thead>
+              <tbody id="pendingVendorsOverview"><tr><td colspan="4" class="empty-state">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h2 style="font-size:16px; font-weight:500; margin-bottom:16px;">Recent Orders</h2>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+              <tbody id="recentOrdersOverview"><tr><td colspan="4" class="empty-state">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENDORS -->
+    <div class="panel" id="panel-vendors">
+      <div class="page-head">
+        <span class="eyebrow">Admin Panel</span>
+        <h1>Vendor Applications</h1>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all" onclick="filterVendors('all', this)">All</button>
+        <button class="filter-tab" data-filter="pending" onclick="filterVendors('pending', this)">Pending</button>
+        <button class="filter-tab" data-filter="approved" onclick="filterVendors('approved', this)">Approved</button>
+        <button class="filter-tab" data-filter="rejected" onclick="filterVendors('rejected', this)">Rejected</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Business Name</th><th>Contact</th><th>Category</th><th>Description</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="vendorsTableBody"><tr><td colspan="7" class="empty-state">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="panel" id="panel-products">
+      <div class="page-head">
+        <span class="eyebrow">Admin Panel</span>
+        <h1>All Products</h1>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Product Name</th><th>Vendor</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="allProductsBody"><tr><td colspan="7" class="empty-state">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="panel" id="panel-orders">
+      <div class="page-head">
+        <span class="eyebrow">Admin Panel</span>
+        <h1>All Orders</h1>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Order #</th><th>Customer</th><th>Email</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody id="allOrdersBody"><tr><td colspan="7" class="empty-state">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script>
+  let currentUser = null;
+  let allVendors = [];
+  let vendorFilter = 'all';
+
+  // ============================================================
+  // AUTH
+  // ============================================================
+  async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { window.location.href = 'login.html'; return; }
+    currentUser = session.user;
+
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+    if (!profile || profile.role !== 'admin') {
+      alert('Admin access required.');
+      window.location.href = 'index.html';
+      return;
+    }
+
+    document.getElementById('sidebarName').textContent = profile.full_name || 'Admin';
+    document.getElementById('sidebarEmail').textContent = profile.email || currentUser.email;
+
+    loadAll();
+  }
+
+  async function loadAll() {
+    await Promise.all([loadVendors(), loadProducts(), loadOrders()]);
+  }
+
+  // ============================================================
+  // VENDORS
+  // ============================================================
+  async function loadVendors() {
+    const { data } = await supabase.from('vendor_applications').select('*').order('created_at', { ascending: false });
+    allVendors = data || [];
+    renderVendors();
+
+    // Overview: pending
+    const pending = allVendors.filter(v => v.status === 'pending').slice(0, 5);
+    document.getElementById('pendingVendorsOverview').innerHTML = pending.length ? pending.map(v => `
+      <tr>
+        <td><strong>${v.business_name}</strong></td>
+        <td>${v.category || '—'}</td>
+        <td style="font-size:11px;color:var(--ink-50);">${new Date(v.created_at).toLocaleDateString()}</td>
+        <td><button class="btn-approve" onclick="approveVendor('${v.id}', '${v.user_id}')">Approve</button></td>
+      </tr>
+    `).join('') : `<tr><td colspan="4" class="empty-state">No pending applications</td></tr>`;
+
+    // Stats
+    document.getElementById('statVendors').textContent = allVendors.filter(v => v.status === 'approved').length;
+  }
+
+  function renderVendors() {
+    const filtered = vendorFilter === 'all' ? allVendors : allVendors.filter(v => v.status === vendorFilter);
+    const tbody = document.getElementById('vendorsTableBody');
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><h3>No applications found</h3></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = filtered.map(v => `
+      <tr>
+        <td><strong>${v.business_name}</strong></td>
+        <td>${v.contact_name}<br><span style="font-size:11px;color:var(--ink-50);">${v.email}</span></td>
+        <td>${v.category || '—'}</td>
+        <td style="max-width:200px; font-size:12px; color:var(--ink-70);">${(v.description || '').substring(0, 80)}${(v.description || '').length > 80 ? '…' : ''}</td>
+        <td><span class="status-badge status-${v.status}">${v.status}</span></td>
+        <td style="font-size:11px;color:var(--ink-50);white-space:nowrap;">${new Date(v.created_at).toLocaleDateString()}</td>
+        <td>
+          <div class="action-btns">
+            ${v.status !== 'approved' ? `<button class="btn-approve" onclick="approveVendor('${v.id}', '${v.user_id}')">Approve</button>` : ''}
+            ${v.status !== 'rejected' ? `<button class="btn-reject" onclick="rejectVendor('${v.id}')">Reject</button>` : ''}
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function filterVendors(filter, btn) {
+    vendorFilter = filter;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderVendors();
+  }
+
+  async function approveVendor(appId, userId) {
+    if (!confirm('Approve this vendor application? This will grant vendor access.')) return;
+
+    // Update application status
+    await supabase.from('vendor_applications').update({ status: 'approved' }).eq('id', appId);
+
+    // Update user profile role to vendor
+    if (userId) {
+      await supabase.from('profiles').update({ role: 'vendor' }).eq('id', userId);
+    }
+
+    await loadVendors();
+  }
+
+  async function rejectVendor(appId) {
+    if (!confirm('Reject this vendor application?')) return;
+    await supabase.from('vendor_applications').update({ status: 'rejected' }).eq('id', appId);
+    await loadVendors();
+  }
+
+  // ============================================================
+  // PRODUCTS
+  // ============================================================
+  async function loadProducts() {
+    // Admin needs to see all products — we'll use a bypass approach
+    // Note: RLS may limit this; admin should have a service role or relaxed policy
+    const { data } = await supabase
+      .from('products')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    const products = data || [];
+    document.getElementById('statProducts').textContent = products.filter(p => p.status === 'active').length;
+
+    const tbody = document.getElementById('allProductsBody');
+    if (!products.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><h3>No products found</h3></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = products.map(p => `
+      <tr>
+        <td><strong>${p.name}</strong></td>
+        <td style="font-size:12px;">${p.vendor_name || '—'}</td>
+        <td>${p.category || '—'}</td>
+        <td>$${parseFloat(p.price).toFixed(2)}</td>
+        <td>${p.stock}</td>
+        <td><span class="status-badge status-${p.status}">${p.status}</span></td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-remove" onclick="removeProduct('${p.id}')">Remove</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function removeProduct(id) {
+    if (!confirm('Remove this product from the platform?')) return;
+    const { error } = await supabase.from('products').update({ status: 'inactive' }).eq('id', id);
+    if (!error) loadProducts();
+    else alert('Error: ' + error.message);
+  }
+
+  // ============================================================
+  // ORDERS
+  // ============================================================
+  async function loadOrders() {
+    const { data } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    const orders = data || [];
+    const revenue = orders.reduce((s, o) => s + parseFloat(o.total || 0), 0);
+    document.getElementById('statOrders').textContent = orders.length;
+    document.getElementById('statRevenue').textContent = '$' + revenue.toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+    // Overview: recent
+    document.getElementById('recentOrdersOverview').innerHTML = orders.slice(0, 5).map(o => `
+      <tr>
+        <td style="font-family:monospace;font-size:11px;">${o.order_number}</td>
+        <td>${o.customer_name || '—'}</td>
+        <td>$${parseFloat(o.total || 0).toFixed(2)}</td>
+        <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+      </tr>
+    `).join('') || `<tr><td colspan="4" class="empty-state">No orders yet</td></tr>`;
+
+    // Full table
+    const tbody = document.getElementById('allOrdersBody');
+    if (!orders.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><h3>No orders yet</h3></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = orders.map(o => `
+      <tr>
+        <td><strong style="font-family:monospace;font-size:12px;">${o.order_number}</strong></td>
+        <td>${o.customer_name || '—'}</td>
+        <td style="font-size:12px;">${o.customer_email || '—'}</td>
+        <td style="font-size:12px; max-width:180px;">${(o.items || []).map(i => `${i.name} ×${i.quantity}`).join(', ')}</td>
+        <td>$${parseFloat(o.total || 0).toFixed(2)}</td>
+        <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+        <td style="font-size:11px;color:var(--ink-50);white-space:nowrap;">${new Date(o.created_at).toLocaleDateString()}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ============================================================
+  // PANEL NAV
+  // ============================================================
+  function showPanel(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    window.location.href = 'login.html';
+  }
+
+  init();
+</script>
+</body>
+</html>

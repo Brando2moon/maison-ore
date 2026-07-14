@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign In — Maison Oré</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body { background: var(--cream); }
+  .auth-page { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+  .auth-visual { background: var(--ink); position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 48px; overflow: hidden; }
+  .auth-visual::before { content: ""; position: absolute; top: -20%; right: -10%; width: 400px; height: 400px; border: 1px solid rgba(184,137,74,0.2); transform: rotate(45deg); }
+  .auth-visual::after { content: ""; position: absolute; bottom: 10%; left: 10%; width: 200px; height: 200px; border: 1px solid rgba(124,178,214,0.15); }
+  .auth-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--paper); }
+  .auth-brand .brand-mark { border-color: var(--gold-soft); }
+  .auth-brand .brand-mark::before { background: var(--gold-soft); }
+  .auth-quote { position: relative; z-index: 2; }
+  .auth-quote blockquote { font-size: 22px; font-weight: 300; line-height: 1.5; color: var(--paper); letter-spacing: -0.01em; margin-bottom: 16px; }
+  .auth-quote cite { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-soft); font-style: normal; }
+
+  .auth-form-wrap { display: flex; align-items: center; justify-content: center; padding: 48px; background: var(--paper); }
+  .auth-form-inner { width: 100%; max-width: 400px; }
+  .auth-form-inner .eyebrow { margin-bottom: 12px; }
+  .auth-form-inner h1 { margin-bottom: 32px; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-70); }
+  .field input { padding: 13px 16px; border: 1px solid var(--ink-12); background: var(--paper); font-size: 14px; color: var(--ink); outline: none; transition: border-color 0.2s; font-family: var(--font); }
+  .field input:focus { border-color: var(--gold); }
+  .auth-submit { width: 100%; padding: 16px; font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); cursor: pointer; transition: all 0.24s; font-family: var(--font); margin-top: 8px; }
+  .auth-submit:hover { background: transparent; color: var(--ink); border-color: var(--gold); }
+  .auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .auth-links { margin-top: 24px; text-align: center; display: flex; flex-direction: column; gap: 10px; }
+  .auth-links a { font-size: 13px; color: var(--ink-70); text-decoration: none; transition: color 0.2s; }
+  .auth-links a:hover { color: var(--gold); }
+  .auth-links .divider { color: var(--ink-30); font-size: 12px; }
+  .error-msg { color: #c0392b; font-size: 13px; padding: 10px 14px; background: #fdf0ef; border: 1px solid #f5c6c2; margin-bottom: 16px; display: none; }
+  .success-msg { color: #27ae60; font-size: 13px; padding: 10px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; margin-bottom: 16px; display: none; }
+  @media (max-width: 800px) { .auth-visual { display: none; } .auth-page { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="auth-page">
+  <!-- Visual Side -->
+  <div class="auth-visual">
+    <a href="index.html" class="auth-brand"><span class="brand-mark"></span>Maison Oré</a>
+    <div class="auth-quote">
+      <blockquote>"Objects of quiet consequence, made by hands you can trust."</blockquote>
+      <cite>— The Maison Oré Standard</cite>
+    </div>
+  </div>
+
+  <!-- Form Side -->
+  <div class="auth-form-wrap">
+    <div class="auth-form-inner">
+      <span class="eyebrow">Welcome Back</span>
+      <h1 class="h2">Sign in to your account</h1>
+
+      <div id="errorMsg" class="error-msg"></div>
+      <div id="successMsg" class="success-msg"></div>
+
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter') signIn()">
+      </div>
+
+      <button class="auth-submit" id="submitBtn" onclick="signIn()">Sign In →</button>
+
+      <div class="auth-links">
+        <span class="divider">New to Maison Oré?</span>
+        <a href="register.html">Create a customer account →</a>
+        <a href="sell.html">Apply to become a vendor →</a>
+        <a href="vendor-login.html">Vendor sign-in →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+  // If already logged in, redirect
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) redirectByRole(session.user.id);
+  });
+
+  async function redirectByRole(userId) {
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).single();
+    if (!profile) { window.location.href = 'index.html'; return; }
+    if (profile.role === 'admin') window.location.href = 'admin.html';
+    else if (profile.role === 'vendor') window.location.href = 'vendor-dashboard.html';
+    else window.location.href = 'index.html';
+  }
+
+  async function signIn() {
+    const btn = document.getElementById('submitBtn');
+    const errEl = document.getElementById('errorMsg');
+    errEl.style.display = 'none';
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+      errEl.textContent = 'Please enter your email and password.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Sign In →';
+      return;
+    }
+
+    await redirectByRole(data.user.id);
+  }
+</script>
+</body>
+</html>

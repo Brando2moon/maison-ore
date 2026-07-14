@@ -8,10 +8,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   /* ============ HOME PAGE ============ */
 
-  /* Announcement bar */
   .announce {
     background: var(--ink);
     color: rgba(250,250,247,0.85);
@@ -35,297 +35,168 @@
     align-items: stretch;
     min-height: 620px;
   }
-  .hero-copy {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 16px 0;
-  }
+  .hero-copy { display: flex; flex-direction: column; justify-content: space-between; padding: 16px 0; }
   .hero-copy .display { margin-top: 28px; }
   .hero-copy .display em { font-style: normal; color: var(--gold); font-weight: 300; }
-  .hero-lede {
-    max-width: 440px;
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--ink-70);
-    margin-top: 32px;
-  }
+  .hero-lede { max-width: 440px; font-size: 16px; line-height: 1.7; color: var(--ink-70); margin-top: 32px; }
   .hero-actions { display: flex; gap: 14px; margin-top: 40px; }
-  .hero-meta {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    padding-top: 32px;
-    border-top: 1px solid var(--ink-12);
-    margin-top: 48px;
-  }
+  .hero-meta { display: flex; align-items: center; gap: 32px; padding-top: 32px; border-top: 1px solid var(--ink-12); margin-top: 48px; }
   .hero-meta .stat .num { font-size: 28px; font-weight: 300; letter-spacing: -0.02em; }
-  .hero-meta .stat .lbl {
-    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--ink-50); margin-top: 4px;
-  }
-
-  .hero-visual {
-    position: relative;
-    display: grid;
-    grid-template-rows: 2fr 1fr;
-    gap: 16px;
-  }
+  .hero-meta .stat .lbl { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-50); margin-top: 4px; }
+  .hero-visual { position: relative; display: grid; grid-template-rows: 2fr 1fr; gap: 16px; }
   .hero-visual .placeholder { min-height: 380px; }
-  .hero-visual .row {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-  }
+  .hero-visual .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .hero-visual .row .placeholder { min-height: 200px; }
-  .hero-badge {
-    position: absolute;
-    top: 20px; left: 20px;
-    padding: 8px 14px;
-    background: var(--paper);
-    border: 1px solid var(--gold);
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    z-index: 3;
-  }
+  .hero-badge { position: absolute; top: 20px; left: 20px; padding: 8px 14px; background: var(--paper); border: 1px solid var(--gold); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); z-index: 3; }
 
-  /* Marquee — trusted houses */
-  .houses {
-    background: var(--cream);
-    padding: 32px 0;
-    overflow: hidden;
-  }
-  .houses-inner {
-    display: flex;
-    align-items: center;
-    gap: 64px;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  .houses .label {
-    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--ink-50);
-  }
-  .house-name {
-    font-size: 18px; font-weight: 400; letter-spacing: 0.02em;
-    color: var(--ink-70);
-    font-family: "Inter";
-  }
-
-  /* Featured Category */
-  .featured {
-    padding: var(--stack-lg) 0;
-  }
-  .section-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 56px;
-  }
+  /* Shop Section */
+  .shop-section { padding: var(--stack-lg) 0; }
+  .section-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; gap: 24px; }
   .section-head .left { max-width: 560px; }
   .section-head h2 { margin-top: 16px; }
-  .section-head .sub {
-    margin-top: 16px;
-    color: var(--ink-70);
-    max-width: 460px;
-  }
-  .section-head .link {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
-    padding-bottom: 4px;
-    border-bottom: 1px solid var(--gold);
-    color: var(--ink);
-    transition: gap 0.24s ease;
-  }
-  .section-head .link:hover { gap: 16px; }
 
-  .featured-grid {
-    display: grid;
-    grid-template-columns: 1.35fr 1fr;
-    gap: 24px;
+  /* Filter bar */
+  .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; align-items: center; }
+  .filter-bar .search-wrap { position: relative; flex: 1; min-width: 220px; max-width: 320px; }
+  .filter-bar .search-wrap input {
+    width: 100%; padding: 10px 16px 10px 40px;
+    border: 1px solid var(--ink-12); background: var(--paper);
+    font-size: 13px; color: var(--ink); outline: none;
+    transition: border-color 0.2s;
   }
-  .featured-large { position: relative; min-height: 620px; }
-  .featured-large .placeholder { height: 100%; }
-  .featured-large .overlay {
-    position: absolute;
-    left: 32px; bottom: 32px; right: 32px;
-    background: var(--paper);
-    padding: 28px 32px;
-    border-top: 1px solid var(--gold);
-    z-index: 3;
+  .filter-bar .search-wrap input:focus { border-color: var(--gold); }
+  .filter-bar .search-wrap .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--ink-50); width: 16px; height: 16px; }
+  .filter-btn {
+    padding: 10px 18px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    border: 1px solid var(--ink-12); background: var(--paper); color: var(--ink-70);
+    cursor: pointer; transition: all 0.2s; font-family: var(--font);
   }
-  .featured-large .overlay h3 { margin-top: 6px; }
-  .featured-large .overlay .meta {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid var(--ink-12);
-    font-size: 12px;
-    color: var(--ink-70);
-  }
-  .featured-large .overlay .price { color: var(--ink); font-weight: 500; }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-tint); }
 
-  .featured-side {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 24px;
-  }
-  .featured-card {
-    position: relative;
-    min-height: 298px;
-    background: var(--cream);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-  .featured-card .placeholder { min-height: 298px; }
-  .featured-card .body {
-    padding: 32px 28px;
-    display: flex; flex-direction: column; justify-content: space-between;
-  }
-  .featured-card .body h3 { margin-top: 12px; }
-  .featured-card .body .foot {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 12px; color: var(--ink-70);
-    padding-top: 16px;
-    border-top: 1px solid var(--ink-12);
-  }
-  .featured-card .body .foot .price { color: var(--ink); font-weight: 500; }
+  /* Product Grid */
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px; }
+  .product-card { background: var(--paper); border: 1px solid transparent; transition: border-color 0.24s, transform 0.24s; cursor: pointer; }
+  .product-card:hover { border-color: var(--ink-12); transform: translateY(-4px); }
+  .product-img { position: relative; aspect-ratio: 4/5; overflow: hidden; background: var(--cream); }
+  .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+  .product-card:hover .product-img img { transform: scale(1.04); }
+  .product-img .img-placeholder { width: 100%; height: 100%; display: grid; place-items: center; background: var(--cream); background-image: repeating-linear-gradient(135deg, transparent 0, transparent 14px, rgba(11,31,58,0.035) 14px, rgba(11,31,58,0.035) 15px); }
+  .product-img .img-placeholder span { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-50); background: var(--paper); padding: 6px 10px; border: 1px solid var(--ink-12); }
+  .product-badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; background: var(--paper); border: 1px solid var(--gold); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+  .product-body { padding: 20px; }
+  .product-vendor { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .product-name { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 12px; line-height: 1.3; }
+  .product-foot { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--ink-12); }
+  .product-price { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; }
+  .product-foot .btn-add { padding: 8px 16px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--ink-12); background: var(--paper); color: var(--ink-70); cursor: pointer; transition: all 0.2s; font-family: var(--font); }
+  .product-foot .btn-add:hover { border-color: var(--gold); color: var(--gold); }
+  .no-products { text-align: center; padding: 80px 20px; color: var(--ink-50); }
+  .no-products h3 { margin-bottom: 12px; color: var(--ink-70); }
 
-  /* Vendor strip */
-  .vendors {
-    padding: var(--stack-lg) 0;
-    background: var(--cream);
-  }
-  .vendors-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    margin-top: 56px;
-  }
-  .vendor-card {
-    background: var(--paper);
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    border: 1px solid transparent;
-    transition: border-color 0.24s ease, transform 0.24s ease;
-  }
-  .vendor-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-3px);
-  }
-  .vendor-avatar {
-    width: 56px; height: 56px;
-    background: var(--sky-tint);
-    display: grid; place-items: center;
-    color: var(--sky-deep);
-    font-size: 16px; font-weight: 500;
-    letter-spacing: 0.06em;
-    border: 1px solid var(--ink-12);
-  }
-  .vendor-card .name { font-size: 16px; font-weight: 500; margin-top: 4px; }
-  .vendor-card .loc { font-size: 12px; color: var(--ink-50); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
-  .vendor-card .stats {
-    display: flex; justify-content: space-between;
-    padding-top: 16px; border-top: 1px solid var(--ink-12);
-    font-size: 12px; color: var(--ink-70);
-  }
-  .vendor-card .stats strong { color: var(--ink); font-weight: 500; }
+  /* Cart Sidebar */
+  .cart-overlay { position: fixed; inset: 0; background: rgba(11,31,58,0.5); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+  .cart-sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 420px; max-width: 95vw; background: var(--paper); z-index: 101; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.3s ease; box-shadow: -4px 0 40px rgba(11,31,58,0.12); }
+  .cart-sidebar.open { transform: translateX(0); }
+  .cart-head { padding: 24px 28px; border-bottom: 1px solid var(--ink-12); display: flex; justify-content: space-between; align-items: center; }
+  .cart-head h3 { font-size: 16px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+  .cart-close { width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--ink-70); border: none; background: none; font-size: 20px; }
+  .cart-close:hover { color: var(--gold); }
+  .cart-items { flex: 1; overflow-y: auto; padding: 24px 28px; display: flex; flex-direction: column; gap: 20px; }
+  .cart-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; gap: 12px; color: var(--ink-50); }
+  .cart-empty svg { width: 48px; height: 48px; stroke-width: 1; opacity: 0.4; }
+  .cart-item { display: grid; grid-template-columns: 72px 1fr auto; gap: 14px; align-items: start; }
+  .cart-item-img { width: 72px; height: 90px; object-fit: cover; background: var(--cream); }
+  .cart-item-info { display: flex; flex-direction: column; gap: 4px; }
+  .cart-item-name { font-size: 13px; font-weight: 500; line-height: 1.3; }
+  .cart-item-vendor { font-size: 11px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; }
+  .cart-item-qty { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .qty-btn { width: 26px; height: 26px; display: grid; place-items: center; border: 1px solid var(--ink-12); background: none; cursor: pointer; font-size: 16px; color: var(--ink-70); transition: border-color 0.2s; font-family: var(--font); }
+  .qty-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .qty-num { font-size: 13px; min-width: 20px; text-align: center; }
+  .cart-item-price { font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .cart-item-remove { font-size: 11px; color: var(--ink-50); cursor: pointer; background: none; border: none; font-family: var(--font); margin-top: 4px; text-decoration: underline; }
+  .cart-item-remove:hover { color: var(--ink); }
+  .cart-foot { padding: 20px 28px 28px; border-top: 1px solid var(--ink-12); }
+  .cart-totals { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .cart-total-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-70); }
+  .cart-total-row.final { font-size: 16px; font-weight: 500; color: var(--ink); padding-top: 12px; border-top: 1px solid var(--ink-12); margin-top: 4px; }
+  .cart-foot .btn { width: 100%; justify-content: center; }
 
-  /* Editorial */
-  .editorial {
-    padding: var(--stack-lg) 0;
-  }
-  .editorial-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 72px;
-    align-items: center;
-  }
-  .editorial-copy h2 { margin-top: 20px; }
-  .editorial-copy p {
-    color: var(--ink-70);
-    margin-top: 24px;
-    font-size: 16px;
-    line-height: 1.8;
-  }
-  .editorial-copy p + p { margin-top: 16px; }
-  .editorial-copy .btn { margin-top: 40px; }
-  .editorial-visual { min-height: 540px; position: relative; }
-  .editorial-quote {
-    position: absolute;
-    bottom: 32px; left: 32px; right: 32px;
-    background: var(--paper);
-    padding: 28px 32px;
-    z-index: 3;
-    border-left: 2px solid var(--gold);
-  }
-  .editorial-quote .q {
-    font-size: 18px; font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: -0.01em;
-  }
-  .editorial-quote .attr {
-    margin-top: 16px;
-    font-size: 11px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--ink-50);
-  }
+  /* Cart badge */
+  .cart-badge { position: absolute; top: -6px; right: -6px; background: var(--gold); color: var(--paper); font-size: 9px; font-weight: 600; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; padding: 0 4px; font-family: var(--font); }
+  .icon-btn { position: relative; }
+
+  /* Nav actions */
+  .nav-action-link { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-70); transition: color 0.2s; padding: 6px 0; border-bottom: 1px solid transparent; }
+  .nav-action-link:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* Houses strip */
+  .houses { background: var(--cream); padding: 32px 0; overflow: hidden; }
+  .houses-inner { display: flex; align-items: center; gap: 64px; justify-content: space-between; flex-wrap: wrap; }
+  .houses .label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-50); }
+  .house-name { font-size: 18px; font-weight: 400; letter-spacing: 0.02em; color: var(--ink-70); }
 
   /* Vendor CTA */
-  .become-vendor {
-    background: var(--ink);
-    color: var(--paper);
-    padding: var(--stack-lg) 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .become-vendor::before {
-    content: "";
-    position: absolute;
-    top: 0; right: 0; width: 40%; height: 100%;
-    background: linear-gradient(135deg, transparent 0%, rgba(124, 178, 214, 0.08) 100%);
-  }
-  .bv-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 80px;
-    align-items: center;
-    position: relative;
-  }
+  .become-vendor { background: var(--ink); color: var(--paper); padding: var(--stack-lg) 0; position: relative; overflow: hidden; }
+  .become-vendor::before { content: ""; position: absolute; top: 0; right: 0; width: 40%; height: 100%; background: linear-gradient(135deg, transparent 0%, rgba(124,178,214,0.08) 100%); }
+  .bv-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: center; position: relative; }
   .bv-copy .eyebrow { color: var(--gold-soft); }
   .bv-copy h2 { margin-top: 20px; }
   .bv-copy p { margin-top: 24px; color: rgba(250,250,247,0.7); max-width: 480px; font-size: 16px; line-height: 1.8; }
   .bv-copy .btn { margin-top: 40px; }
-  .bv-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-  }
-  .bv-stat {
-    padding: 32px 0;
-    border-top: 1px solid rgba(250,250,247,0.15);
-  }
-  .bv-stat .num {
-    font-size: 48px; font-weight: 300; letter-spacing: -0.03em;
-    color: var(--gold-soft);
-  }
-  .bv-stat .lbl {
-    margin-top: 8px;
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(250,250,247,0.6);
-  }
+  .bv-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .bv-stat { padding: 32px 0; border-top: 1px solid rgba(250,250,247,0.15); }
+  .bv-stat .num { font-size: 48px; font-weight: 300; letter-spacing: -0.03em; color: var(--gold-soft); }
+  .bv-stat .lbl { margin-top: 8px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(250,250,247,0.6); }
+
+  /* Loading */
+  .loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px; }
+  .skeleton { background: var(--cream); animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .skeleton-card { border: 1px solid var(--ink-06); }
+  .skeleton-img { aspect-ratio: 4/5; background: var(--cream); }
+  .skeleton-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .skeleton-line { height: 12px; background: var(--ink-06); }
+  .skeleton-line.short { width: 60%; }
 
   @media (max-width: 1000px) {
-    .hero-grid, .featured-grid, .editorial-grid, .bv-grid { grid-template-columns: 1fr; gap: 40px; }
-    .vendors-grid { grid-template-columns: 1fr 1fr; }
-    .section-head { flex-direction: column; align-items: flex-start; gap: 24px; }
-    .featured-card { grid-template-columns: 1fr; }
+    .hero-grid, .bv-grid { grid-template-columns: 1fr; gap: 40px; }
+    .section-head { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 600px) {
+    .cart-sidebar { width: 100vw; }
+    .products-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
   }
 </style>
 </head>
 <body>
 
+<!-- Cart Overlay -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-head">
+    <h3>Shopping Cart</h3>
+    <button class="cart-close" onclick="closeCart()" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-2 10H8L6 6z"/><path d="M6 6 4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+      <p>Your cart is empty</p>
+      <a href="#shop" onclick="closeCart()" style="color:var(--gold); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; border-bottom: 1px solid var(--gold); padding-bottom:2px;">Start Shopping →</a>
+    </div>
+  </div>
+  <div class="cart-foot" id="cartFoot" style="display:none;">
+    <div class="cart-totals">
+      <div class="cart-total-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+      <div class="cart-total-row"><span>Shipping</span><span>Calculated at checkout</span></div>
+      <div class="cart-total-row final"><span>Total</span><span id="cartTotal">$0.00</span></div>
+    </div>
+    <a href="checkout.html" class="btn btn-primary btn-lg">Proceed to Checkout <span class="arrow">→</span></a>
+  </div>
+</div>
 
 <!-- NAV -->
 <header class="nav">
@@ -337,25 +208,30 @@
     <nav>
       <ul class="nav-links">
         <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="shop.html">Shop</a></li>
+        <li><a href="#shop">Shop</a></li>
         <li><a href="sell.html">Become a Vendor</a></li>
-        <li><a href="dashboard.html">Dashboard</a></li>
       </ul>
     </nav>
     <div class="nav-actions">
-      <button class="icon-btn" aria-label="Search">
+      <a href="#shop" class="icon-btn" aria-label="Search" onclick="document.getElementById('searchInput').focus(); return false;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </button>
-      <button class="icon-btn" aria-label="Account">
+      </a>
+      <a href="login.html" class="icon-btn" aria-label="Account" id="navAccountBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-      </button>
-      <button class="icon-btn" aria-label="Cart">
+      </a>
+      <button class="icon-btn" aria-label="Cart" onclick="openCart()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-2 10H8L6 6z"/><path d="M6 6 4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
-        <span style="position:absolute; margin-left:14px; margin-top:-14px; background: var(--gold); color: var(--paper); font-size:9px; padding: 2px 5px; border-radius: 10px;">2</span>
+        <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
       </button>
+      <a id="navAuthLink" href="login.html" class="nav-action-link" style="white-space:nowrap;">Login</a>
     </div>
   </div>
 </header>
+
+<!-- Announcement Bar -->
+<div class="announce">
+  New arrivals — The Winter Edit<span class="gold-divider"></span>Free delivery on orders over $500<span class="gold-divider"></span>Verified at the source
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -371,34 +247,22 @@
           A curated marketplace where independent ateliers, heritage houses, and modern makers offer their most considered work — each piece verified by our provenance team.
         </p>
         <div class="hero-actions">
-          <a href="shop.html" class="btn btn-primary">
+          <a href="#shop" class="btn btn-primary">
             Explore Collection
             <span class="arrow">→</span>
           </a>
-          <a href="#featured" class="btn btn-ghost">The Fall Edit</a>
+          <a href="sell.html" class="btn btn-ghost">Become a Vendor</a>
         </div>
       </div>
       <div class="hero-meta">
-        <div class="stat">
-          <div class="num tabular">240+</div>
-          <div class="lbl">Verified Houses</div>
-        </div>
-        <div class="stat">
-          <div class="num tabular">14k</div>
-          <div class="lbl">Curated Pieces</div>
-        </div>
-        <div class="stat">
-          <div class="num tabular">38</div>
-          <div class="lbl">Countries</div>
-        </div>
+        <div class="stat"><div class="num tabular">240+</div><div class="lbl">Verified Houses</div></div>
+        <div class="stat"><div class="num tabular">14k</div><div class="lbl">Curated Pieces</div></div>
+        <div class="stat"><div class="num tabular">38</div><div class="lbl">Countries</div></div>
       </div>
     </div>
-
     <div class="hero-visual">
       <span class="hero-badge">Featured · Objet</span>
-      <div class="placeholder">
-        <span class="placeholder-label">Hero — Featured Piece</span>
-      </div>
+      <div class="placeholder"><span class="placeholder-label">Hero — Featured Piece</span></div>
       <div class="row">
         <div class="placeholder"><span class="placeholder-label">Detail Shot</span></div>
         <div class="placeholder"><span class="placeholder-label">In Situ</span></div>
@@ -420,140 +284,38 @@
   </div>
 </section>
 
-<!-- Featured Category -->
-<section class="featured" id="featured">
+<!-- SHOP SECTION -->
+<section class="shop-section" id="shop">
   <div class="container">
     <div class="section-head">
       <div class="left">
-        <span class="eyebrow">Featured Category</span>
-        <h2 class="h1">The Ceramics Edit —<br>Handmade Vessels</h2>
-        <p class="sub">Twenty-two pieces selected from ateliers across four continents. Each thrown, glazed, and fired by a single maker over the course of weeks — often months.</p>
+        <span class="eyebrow">The Collection</span>
+        <h2 class="h1">Curated Pieces</h2>
+        <p style="margin-top:12px; color:var(--ink-70);">Every item sourced directly from verified makers.</p>
       </div>
-      <a href="shop.html" class="link">
-        View all 22 pieces
-        <span>→</span>
-      </a>
     </div>
 
-    <div class="featured-grid">
-      <div class="featured-large">
-        <div class="placeholder"><span class="placeholder-label">Product Shot — Signature Vessel</span></div>
-        <div class="overlay">
-          <span class="eyebrow ink">Atelier Kōgei · Kyōto</span>
-          <h3 class="h3">Raku Tea Vessel, Iron-Glazed</h3>
-          <div class="meta">
-            <span>Edition of 12 · Signed</span>
-            <span class="price">$1,840</span>
-          </div>
-        </div>
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" id="searchInput" placeholder="Search products…" oninput="filterProducts()">
       </div>
-      <div class="featured-side">
-        <div class="featured-card">
-          <div class="placeholder"><span class="placeholder-label">Product Shot</span></div>
-          <div class="body">
-            <div>
-              <span class="eyebrow ink">Maison Ferrière · Provence</span>
-              <h3 class="h3">Terracotta Amphora, 42cm</h3>
-            </div>
-            <div class="foot">
-              <span>Made to order</span>
-              <span class="price">$620</span>
-            </div>
-          </div>
-        </div>
-        <div class="featured-card">
-          <div class="placeholder"><span class="placeholder-label">Product Shot</span></div>
-          <div class="body">
-            <div>
-              <span class="eyebrow ink">Studio Halden · Oslo</span>
-              <h3 class="h3">Stoneware Carafe Set of Two</h3>
-            </div>
-            <div class="foot">
-              <span>In stock · 4 remaining</span>
-              <span class="price">$385</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <button class="filter-btn active" data-cat="all" onclick="setCategory('all', this)">All</button>
+      <button class="filter-btn" data-cat="Ceramics" onclick="setCategory('Ceramics', this)">Ceramics</button>
+      <button class="filter-btn" data-cat="Textiles" onclick="setCategory('Textiles', this)">Textiles</button>
+      <button class="filter-btn" data-cat="Furniture" onclick="setCategory('Furniture', this)">Furniture</button>
+      <button class="filter-btn" data-cat="Lighting" onclick="setCategory('Lighting', this)">Lighting</button>
+      <button class="filter-btn" data-cat="Jewelry" onclick="setCategory('Jewelry', this)">Jewelry</button>
+      <button class="filter-btn" data-cat="Objets" onclick="setCategory('Objets', this)">Objets</button>
     </div>
-  </div>
-</section>
 
-<!-- Editorial -->
-<section class="editorial">
-  <div class="container editorial-grid">
-    <div class="editorial-copy">
-      <span class="eyebrow">The Standard</span>
-      <h2 class="h1">Every piece, verified<br>at the source.</h2>
-      <p>Before a vendor lists on Maison Oré, our provenance team visits the atelier, meets the maker, and documents the process. Nothing enters our catalog without a signed certificate of origin.</p>
-      <p>The result is a marketplace with the discretion of a private house and the reach of the modern web — where you know exactly who made what you carry home.</p>
-      <a href="sell.html" class="btn btn-ghost">Read our vendor standards</a>
-    </div>
-    <div class="editorial-visual placeholder">
-      <span class="placeholder-label">Editorial — Atelier Visit</span>
-      <div class="editorial-quote">
-        <div class="q">"They didn't ask for our best marketing photos. They asked to watch us work for three days. That is a rare kind of respect."</div>
-        <div class="attr">— Ines Halden, Studio Halden · Oslo</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Vendors -->
-<section class="vendors">
-  <div class="container">
-    <div class="section-head">
-      <div class="left">
-        <span class="eyebrow">Featured Ateliers</span>
-        <h2 class="h1">Houses of the season</h2>
-      </div>
-      <a href="shop.html" class="link">All 240 vendors <span>→</span></a>
-    </div>
-    <div class="vendors-grid">
-      <div class="vendor-card">
-        <div class="vendor-avatar">AK</div>
-        <div>
-          <div class="name">Atelier Kōgei</div>
-          <div class="loc">Kyōto · JP</div>
-        </div>
-        <div class="stats">
-          <span><strong>42</strong> pieces</span>
-          <span><strong>4.9</strong> ★</span>
-        </div>
-      </div>
-      <div class="vendor-card">
-        <div class="vendor-avatar" style="background: var(--gold-tint); color: var(--gold);">MF</div>
-        <div>
-          <div class="name">Maison Ferrière</div>
-          <div class="loc">Provence · FR</div>
-        </div>
-        <div class="stats">
-          <span><strong>28</strong> pieces</span>
-          <span><strong>4.8</strong> ★</span>
-        </div>
-      </div>
-      <div class="vendor-card">
-        <div class="vendor-avatar">SH</div>
-        <div>
-          <div class="name">Studio Halden</div>
-          <div class="loc">Oslo · NO</div>
-        </div>
-        <div class="stats">
-          <span><strong>36</strong> pieces</span>
-          <span><strong>4.9</strong> ★</span>
-        </div>
-      </div>
-      <div class="vendor-card">
-        <div class="vendor-avatar" style="background: var(--gold-tint); color: var(--gold);">HO</div>
-        <div>
-          <div class="name">Herrera & Ono</div>
-          <div class="loc">Marrakech · MA</div>
-        </div>
-        <div class="stats">
-          <span><strong>19</strong> pieces</span>
-          <span><strong>5.0</strong> ★</span>
-        </div>
-      </div>
+    <!-- Products Grid -->
+    <div class="products-grid" id="productsGrid">
+      <!-- Skeleton loading -->
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div></div>
+      <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div></div>
     </div>
   </div>
 </section>
@@ -565,28 +327,13 @@
       <span class="eyebrow">For Makers</span>
       <h2 class="h1" style="color: var(--paper);">Sell where your work belongs.</h2>
       <p>Maison Oré partners with a limited number of new houses each quarter. Our team handles curation, provenance verification, storytelling, and white-glove fulfillment — you focus on the work.</p>
-      <a href="sell.html" class="btn btn-sky">
-        Apply to sell
-        <span class="arrow">→</span>
-      </a>
+      <a href="sell.html" class="btn btn-sky">Apply to sell <span class="arrow">→</span></a>
     </div>
     <div class="bv-stats">
-      <div class="bv-stat">
-        <div class="num tabular">12%</div>
-        <div class="lbl">Platform commission</div>
-      </div>
-      <div class="bv-stat">
-        <div class="num tabular">7 days</div>
-        <div class="lbl">Avg. approval time</div>
-      </div>
-      <div class="bv-stat">
-        <div class="num tabular">$4.2M</div>
-        <div class="lbl">Paid to vendors YTD</div>
-      </div>
-      <div class="bv-stat">
-        <div class="num tabular">48hr</div>
-        <div class="lbl">Payout on sale</div>
-      </div>
+      <div class="bv-stat"><div class="num tabular">12%</div><div class="lbl">Platform commission</div></div>
+      <div class="bv-stat"><div class="num tabular">7 days</div><div class="lbl">Avg. approval time</div></div>
+      <div class="bv-stat"><div class="num tabular">$4.2M</div><div class="lbl">Paid to vendors YTD</div></div>
+      <div class="bv-stat"><div class="num tabular">48hr</div><div class="lbl">Payout on sale</div></div>
     </div>
   </div>
 </section>
@@ -596,37 +343,32 @@
   <div class="container">
     <div class="footer-grid">
       <div>
-        <div class="brand footer-brand">
-          <span class="brand-mark"></span>
-          Maison Oré
-        </div>
+        <div class="brand footer-brand"><span class="brand-mark"></span>Maison Oré</div>
         <p class="footer-desc">A curated marketplace for objects of quiet consequence — verified at the source, delivered with care.</p>
       </div>
       <div>
         <h5>Shop</h5>
         <ul>
-          <li><a href="shop.html">All Collections</a></li>
-          <li><a href="shop.html">Ceramics</a></li>
-          <li><a href="shop.html">Textiles</a></li>
-          <li><a href="shop.html">Objets</a></li>
+          <li><a href="#shop">All Collections</a></li>
+          <li><a href="javascript:setCategory('Ceramics')">Ceramics</a></li>
+          <li><a href="javascript:setCategory('Textiles')">Textiles</a></li>
+          <li><a href="javascript:setCategory('Objets')">Objets</a></li>
         </ul>
       </div>
       <div>
         <h5>Vendors</h5>
         <ul>
           <li><a href="sell.html">Become a Vendor</a></li>
-          <li><a href="dashboard.html">Vendor Login</a></li>
-          <li><a href="#">Vendor Standards</a></li>
-          <li><a href="#">Commission Schedule</a></li>
+          <li><a href="vendor-login.html">Vendor Login</a></li>
+          <li><a href="vendor-dashboard.html">Vendor Dashboard</a></li>
         </ul>
       </div>
       <div>
-        <h5>Maison</h5>
+        <h5>Account</h5>
         <ul>
-          <li><a href="#">Our Standard</a></li>
-          <li><a href="#">Provenance Team</a></li>
-          <li><a href="#">Journal</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="login.html">Sign In</a></li>
+          <li><a href="register.html">Register</a></li>
+          <li><a href="admin.html">Admin</a></li>
         </ul>
       </div>
     </div>
@@ -637,5 +379,173 @@
   </div>
 </footer>
 
+<script src="config.js"></script>
+<script>
+  // ============================================================
+  // STATE
+  // ============================================================
+  let allProducts = [];
+  let activeCategory = 'all';
+  let cart = JSON.parse(localStorage.getItem('maisonore_cart') || '[]');
+
+  // ============================================================
+  // AUTH CHECK
+  // ============================================================
+  async function initAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    const authLink = document.getElementById('navAuthLink');
+    const accountBtn = document.getElementById('navAccountBtn');
+    if (session) {
+      const { data: profile } = await supabase.from('profiles').select('role, full_name').eq('id', session.user.id).single();
+      if (profile) {
+        authLink.textContent = profile.full_name ? profile.full_name.split(' ')[0] : 'Account';
+        if (profile.role === 'admin') {
+          accountBtn.href = 'admin.html';
+          authLink.href = 'admin.html';
+        } else if (profile.role === 'vendor') {
+          accountBtn.href = 'vendor-dashboard.html';
+          authLink.href = 'vendor-dashboard.html';
+        } else {
+          accountBtn.href = '#';
+          authLink.href = '#';
+          authLink.onclick = async (e) => { e.preventDefault(); await supabase.auth.signOut(); location.reload(); };
+        }
+      }
+    }
+  }
+
+  // ============================================================
+  // PRODUCTS
+  // ============================================================
+  async function loadProducts() {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('status', 'active')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      document.getElementById('productsGrid').innerHTML = `<div class="no-products" style="grid-column:1/-1"><h3>Unable to load products</h3><p>${error.message}</p></div>`;
+      return;
+    }
+    allProducts = data || [];
+    renderProducts();
+  }
+
+  function renderProducts() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    let filtered = allProducts;
+    if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
+    if (search) filtered = filtered.filter(p => p.name.toLowerCase().includes(search) || (p.description || '').toLowerCase().includes(search) || (p.vendor_name || '').toLowerCase().includes(search));
+
+    const grid = document.getElementById('productsGrid');
+    if (!filtered.length) {
+      grid.innerHTML = `<div class="no-products" style="grid-column:1/-1"><h3>No products found</h3><p>Try a different category or search term.</p></div>`;
+      return;
+    }
+    grid.innerHTML = filtered.map(p => `
+      <div class="product-card">
+        <div class="product-img">
+          ${p.image_url ? `<img src="${p.image_url}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><span>${p.category || 'Product'}</span></div>'">` : `<div class="img-placeholder"><span>${p.category || 'Product'}</span></div>`}
+          <span class="product-badge">${p.category || 'Objet'}</span>
+        </div>
+        <div class="product-body">
+          <div class="product-vendor">${p.vendor_name || 'Maison Oré'}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-foot">
+            <span class="product-price">$${parseFloat(p.price).toLocaleString('en-US', {minimumFractionDigits:2})}</span>
+            <button class="btn-add" onclick="addToCart(${JSON.stringify({id:p.id,name:p.name,price:p.price,vendor_name:p.vendor_name||'Maison Oré',image_url:p.image_url||''}).replace(/"/g,'&quot;')})">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterProducts() { renderProducts(); }
+
+  function setCategory(cat, btn) {
+    activeCategory = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    else { const b = document.querySelector(`[data-cat="${cat}"]`); if(b) b.classList.add('active'); }
+    renderProducts();
+    document.getElementById('shop').scrollIntoView({behavior:'smooth'});
+  }
+
+  // ============================================================
+  // CART
+  // ============================================================
+  function saveCart() { localStorage.setItem('maisonore_cart', JSON.stringify(cart)); updateCartUI(); }
+
+  function addToCart(product) {
+    const existing = cart.find(i => i.id === product.id);
+    if (existing) { existing.qty++; }
+    else { cart.push({...product, qty: 1}); }
+    saveCart();
+    openCart();
+  }
+
+  function removeFromCart(id) { cart = cart.filter(i => i.id !== id); saveCart(); }
+
+  function updateQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) { removeFromCart(id); return; }
+    saveCart();
+  }
+
+  function updateCartUI() {
+    const total = cart.reduce((s, i) => s + (parseFloat(i.price) * i.qty), 0);
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    const badge = document.getElementById('cartBadge');
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'flex' : 'none';
+    document.getElementById('cartSubtotal').textContent = '$' + total.toFixed(2);
+    document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
+    const foot = document.getElementById('cartFoot');
+    foot.style.display = cart.length > 0 ? 'block' : 'none';
+
+    const itemsEl = document.getElementById('cartItems');
+    if (!cart.length) {
+      itemsEl.innerHTML = `<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-2 10H8L6 6z"/><path d="M6 6 4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg><p>Your cart is empty</p><a href="#shop" onclick="closeCart()" style="color:var(--gold);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid var(--gold);padding-bottom:2px;">Start Shopping →</a></div>`;
+      return;
+    }
+    itemsEl.innerHTML = cart.map(i => `
+      <div class="cart-item">
+        <div>${i.image_url ? `<img class="cart-item-img" src="${i.image_url}" alt="${i.name}">` : `<div class="cart-item-img" style="background:var(--cream);display:grid;place-items:center;font-size:10px;color:var(--ink-50);">${i.name[0]}</div>`}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-vendor">${i.vendor_name}</div>
+          <div class="cart-item-name">${i.name}</div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="updateQty('${i.id}', -1)">−</button>
+            <span class="qty-num">${i.qty}</span>
+            <button class="qty-btn" onclick="updateQty('${i.id}', 1)">+</button>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart('${i.id}')">Remove</button>
+        </div>
+        <div class="cart-item-price">$${(parseFloat(i.price) * i.qty).toFixed(2)}</div>
+      </div>
+    `).join('');
+  }
+
+  function openCart() {
+    document.getElementById('cartOverlay').classList.add('open');
+    document.getElementById('cartSidebar').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCart() {
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.getElementById('cartSidebar').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  initAuth();
+  loadProducts();
+  updateCartUI();
+</script>
 </body>
 </html>
