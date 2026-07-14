@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Maison Oré — Curated Luxury Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css"/>
+<style>
+  /* ============ HOME PAGE ============ */
+
+  /* Announcement bar */
+  .announce {
+    background: var(--ink);
+    color: rgba(250,250,247,0.85);
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .announce .gold-divider { background: var(--gold-soft); margin: 0 14px; vertical-align: middle; }
+
+  /* Hero */
+  .hero {
+    padding: 72px 0 96px;
+    position: relative;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: 64px;
+    align-items: stretch;
+    min-height: 620px;
+  }
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+  .hero-copy .display { margin-top: 28px; }
+  .hero-copy .display em { font-style: normal; color: var(--gold); font-weight: 300; }
+  .hero-lede {
+    max-width: 440px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-70);
+    margin-top: 32px;
+  }
+  .hero-actions { display: flex; gap: 14px; margin-top: 40px; }
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--ink-12);
+    margin-top: 48px;
+  }
+  .hero-meta .stat .num { font-size: 28px; font-weight: 300; letter-spacing: -0.02em; }
+  .hero-meta .stat .lbl {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-50); margin-top: 4px;
+  }
+
+  .hero-visual {
+    position: relative;
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+    gap: 16px;
+  }
+  .hero-visual .placeholder { min-height: 380px; }
+  .hero-visual .row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .hero-visual .row .placeholder { min-height: 200px; }
+  .hero-badge {
+    position: absolute;
+    top: 20px; left: 20px;
+    padding: 8px 14px;
+    background: var(--paper);
+    border: 1px solid var(--gold);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    z-index: 3;
+  }
+
+  /* Marquee — trusted houses */
+  .houses {
+    background: var(--cream);
+    padding: 32px 0;
+    overflow: hidden;
+  }
+  .houses-inner {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .houses .label {
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink-50);
+  }
+  .house-name {
+    font-size: 18px; font-weight: 400; letter-spacing: 0.02em;
+    color: var(--ink-70);
+    font-family: "Inter";
+  }
+
+  /* Featured Category */
+  .featured {
+    padding: var(--stack-lg) 0;
+  }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 56px;
+  }
+  .section-head .left { max-width: 560px; }
+  .section-head h2 { margin-top: 16px; }
+  .section-head .sub {
+    margin-top: 16px;
+    color: var(--ink-70);
+    max-width: 460px;
+  }
+  .section-head .link {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--gold);
+    color: var(--ink);
+    transition: gap 0.24s ease;
+  }
+  .section-head .link:hover { gap: 16px; }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 24px;
+  }
+  .featured-large { position: relative; min-height: 620px; }
+  .featured-large .placeholder { height: 100%; }
+  .featured-large .overlay {
+    position: absolute;
+    left: 32px; bottom: 32px; right: 32px;
+    background: var(--paper);
+    padding: 28px 32px;
+    border-top: 1px solid var(--gold);
+    z-index: 3;
+  }
+  .featured-large .overlay h3 { margin-top: 6px; }
+  .featured-large .overlay .meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--ink-12);
+    font-size: 12px;
+    color: var(--ink-70);
+  }
+  .featured-large .overlay .price { color: var(--ink); font-weight: 500; }
+
+  .featured-side {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 24px;
+  }
+  .featured-card {
+    position: relative;
+    min-height: 298px;
+    background: var(--cream);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .featured-card .placeholder { min-height: 298px; }
+  .featured-card .body {
+    padding: 32px 28px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .featured-card .body h3 { margin-top: 12px; }
+  .featured-card .body .foot {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: var(--ink-70);
+    padding-top: 16px;
+    border-top: 1px solid var(--ink-12);
+  }
+  .featured-card .body .foot .price { color: var(--ink); font-weight: 500; }
+
+  /* Vendor strip */
+  .vendors {
+    padding: var(--stack-lg) 0;
+    background: var(--cream);
+  }
+  .vendors-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+  }
+  .vendor-card {
+    background: var(--paper);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid transparent;
+    transition: border-color 0.24s ease, transform 0.24s ease;
+  }
+  .vendor-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+  }
+  .vendor-avatar {
+    width: 56px; height: 56px;
+    background: var(--sky-tint);
+    display: grid; place-items: center;
+    color: var(--sky-deep);
+    font-size: 16px; font-weight: 500;
+    letter-spacing: 0.06em;
+    border: 1px solid var(--ink-12);
+  }
+  .vendor-card .name { font-size: 16px; font-weight: 500; margin-top: 4px; }
+  .vendor-card .loc { font-size: 12px; color: var(--ink-50); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
+  .vendor-card .stats {
+    display: flex; justify-content: space-between;
+    padding-top: 16px; border-top: 1px solid var(--ink-12);
+    font-size: 12px; color: var(--ink-70);
+  }
+  .vendor-card .stats strong { color: var(--ink); font-weight: 500; }
+
+  /* Editorial */
+  .editorial {
+    padding: var(--stack-lg) 0;
+  }
+  .editorial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 72px;
+    align-items: center;
+  }
+  .editorial-copy h2 { margin-top: 20px; }
+  .editorial-copy p {
+    color: var(--ink-70);
+    margin-top: 24px;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  .editorial-copy p + p { margin-top: 16px; }
+  .editorial-copy .btn { margin-top: 40px; }
+  .editorial-visual { min-height: 540px; position: relative; }
+  .editorial-quote {
+    position: absolute;
+    bottom: 32px; left: 32px; right: 32px;
+    background: var(--paper);
+    padding: 28px 32px;
+    z-index: 3;
+    border-left: 2px solid var(--gold);
+  }
+  .editorial-quote .q {
+    font-size: 18px; font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+  .editorial-quote .attr {
+    margin-top: 16px;
+    font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-50);
+  }
+
+  /* Vendor CTA */
+  .become-vendor {
+    background: var(--ink);
+    color: var(--paper);
+    padding: var(--stack-lg) 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .become-vendor::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; width: 40%; height: 100%;
+    background: linear-gradient(135deg, transparent 0%, rgba(124, 178, 214, 0.08) 100%);
+  }
+  .bv-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+  }
+  .bv-copy .eyebrow { color: var(--gold-soft); }
+  .bv-copy h2 { margin-top: 20px; }
+  .bv-copy p { margin-top: 24px; color: rgba(250,250,247,0.7); max-width: 480px; font-size: 16px; line-height: 1.8; }
+  .bv-copy .btn { margin-top: 40px; }
+  .bv-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .bv-stat {
+    padding: 32px 0;
+    border-top: 1px solid rgba(250,250,247,0.15);
+  }
+  .bv-stat .num {
+    font-size: 48px; font-weight: 300; letter-spacing: -0.03em;
+    color: var(--gold-soft);
+  }
+  .bv-stat .lbl {
+    margin-top: 8px;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(250,250,247,0.6);
+  }
+
+  @media (max-width: 1000px) {
+    .hero-grid, .featured-grid, .editorial-grid, .bv-grid { grid-template-columns: 1fr; gap: 40px; }
+    .vendors-grid { grid-template-columns: 1fr 1fr; }
+    .section-head { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .featured-card { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+
+<!-- NAV -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"></span>
+      Maison Oré
+    </a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="sell.html">Become a Vendor</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-2 10H8L6 6z"/><path d="M6 6 4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+        <span style="position:absolute; margin-left:14px; margin-top:-14px; background: var(--gold); color: var(--paper); font-size:9px; padding: 2px 5px; border-radius: 10px;">2</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <div>
+        <span class="eyebrow">Fall Edit — Collection 07</span>
+        <h1 class="display">
+          Objects of<br>
+          quiet <em>consequence.</em>
+        </h1>
+        <p class="hero-lede">
+          A curated marketplace where independent ateliers, heritage houses, and modern makers offer their most considered work — each piece verified by our provenance team.
+        </p>
+        <div class="hero-actions">
+          <a href="shop.html" class="btn btn-primary">
+            Explore Collection
+            <span class="arrow">→</span>
+          </a>
+          <a href="#featured" class="btn btn-ghost">The Fall Edit</a>
+        </div>
+      </div>
+      <div class="hero-meta">
+        <div class="stat">
+          <div class="num tabular">240+</div>
+          <div class="lbl">Verified Houses</div>
+        </div>
+        <div class="stat">
+          <div class="num tabular">14k</div>
+          <div class="lbl">Curated Pieces</div>
+        </div>
+        <div class="stat">
+          <div class="num tabular">38</div>
+          <div class="lbl">Countries</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <span class="hero-badge">Featured · Objet</span>
+      <div class="placeholder">
+        <span class="placeholder-label">Hero — Featured Piece</span>
+      </div>
+      <div class="row">
+        <div class="placeholder"><span class="placeholder-label">Detail Shot</span></div>
+        <div class="placeholder"><span class="placeholder-label">In Situ</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trusted Houses -->
+<section class="houses">
+  <div class="container houses-inner">
+    <span class="label">Trusted by houses in —</span>
+    <span class="house-name">FLORENCE</span>
+    <span class="house-name">KYŌTO</span>
+    <span class="house-name">COPENHAGEN</span>
+    <span class="house-name">MARRAKECH</span>
+    <span class="house-name">MILAN</span>
+    <span class="house-name">BROOKLYN</span>
+  </div>
+</section>
+
+<!-- Featured Category -->
+<section class="featured" id="featured">
+  <div class="container">
+    <div class="section-head">
+      <div class="left">
+        <span class="eyebrow">Featured Category</span>
+        <h2 class="h1">The Ceramics Edit —<br>Handmade Vessels</h2>
+        <p class="sub">Twenty-two pieces selected from ateliers across four continents. Each thrown, glazed, and fired by a single maker over the course of weeks — often months.</p>
+      </div>
+      <a href="shop.html" class="link">
+        View all 22 pieces
+        <span>→</span>
+      </a>
+    </div>
+
+    <div class="featured-grid">
+      <div class="featured-large">
+        <div class="placeholder"><span class="placeholder-label">Product Shot — Signature Vessel</span></div>
+        <div class="overlay">
+          <span class="eyebrow ink">Atelier Kōgei · Kyōto</span>
+          <h3 class="h3">Raku Tea Vessel, Iron-Glazed</h3>
+          <div class="meta">
+            <span>Edition of 12 · Signed</span>
+            <span class="price">$1,840</span>
+          </div>
+        </div>
+      </div>
+      <div class="featured-side">
+        <div class="featured-card">
+          <div class="placeholder"><span class="placeholder-label">Product Shot</span></div>
+          <div class="body">
+            <div>
+              <span class="eyebrow ink">Maison Ferrière · Provence</span>
+              <h3 class="h3">Terracotta Amphora, 42cm</h3>
+            </div>
+            <div class="foot">
+              <span>Made to order</span>
+              <span class="price">$620</span>
+            </div>
+          </div>
+        </div>
+        <div class="featured-card">
+          <div class="placeholder"><span class="placeholder-label">Product Shot</span></div>
+          <div class="body">
+            <div>
+              <span class="eyebrow ink">Studio Halden · Oslo</span>
+              <h3 class="h3">Stoneware Carafe Set of Two</h3>
+            </div>
+            <div class="foot">
+              <span>In stock · 4 remaining</span>
+              <span class="price">$385</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Editorial -->
+<section class="editorial">
+  <div class="container editorial-grid">
+    <div class="editorial-copy">
+      <span class="eyebrow">The Standard</span>
+      <h2 class="h1">Every piece, verified<br>at the source.</h2>
+      <p>Before a vendor lists on Maison Oré, our provenance team visits the atelier, meets the maker, and documents the process. Nothing enters our catalog without a signed certificate of origin.</p>
+      <p>The result is a marketplace with the discretion of a private house and the reach of the modern web — where you know exactly who made what you carry home.</p>
+      <a href="sell.html" class="btn btn-ghost">Read our vendor standards</a>
+    </div>
+    <div class="editorial-visual placeholder">
+      <span class="placeholder-label">Editorial — Atelier Visit</span>
+      <div class="editorial-quote">
+        <div class="q">"They didn't ask for our best marketing photos. They asked to watch us work for three days. That is a rare kind of respect."</div>
+        <div class="attr">— Ines Halden, Studio Halden · Oslo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Vendors -->
+<section class="vendors">
+  <div class="container">
+    <div class="section-head">
+      <div class="left">
+        <span class="eyebrow">Featured Ateliers</span>
+        <h2 class="h1">Houses of the season</h2>
+      </div>
+      <a href="shop.html" class="link">All 240 vendors <span>→</span></a>
+    </div>
+    <div class="vendors-grid">
+      <div class="vendor-card">
+        <div class="vendor-avatar">AK</div>
+        <div>
+          <div class="name">Atelier Kōgei</div>
+          <div class="loc">Kyōto · JP</div>
+        </div>
+        <div class="stats">
+          <span><strong>42</strong> pieces</span>
+          <span><strong>4.9</strong> ★</span>
+        </div>
+      </div>
+      <div class="vendor-card">
+        <div class="vendor-avatar" style="background: var(--gold-tint); color: var(--gold);">MF</div>
+        <div>
+          <div class="name">Maison Ferrière</div>
+          <div class="loc">Provence · FR</div>
+        </div>
+        <div class="stats">
+          <span><strong>28</strong> pieces</span>
+          <span><strong>4.8</strong> ★</span>
+        </div>
+      </div>
+      <div class="vendor-card">
+        <div class="vendor-avatar">SH</div>
+        <div>
+          <div class="name">Studio Halden</div>
+          <div class="loc">Oslo · NO</div>
+        </div>
+        <div class="stats">
+          <span><strong>36</strong> pieces</span>
+          <span><strong>4.9</strong> ★</span>
+        </div>
+      </div>
+      <div class="vendor-card">
+        <div class="vendor-avatar" style="background: var(--gold-tint); color: var(--gold);">HO</div>
+        <div>
+          <div class="name">Herrera & Ono</div>
+          <div class="loc">Marrakech · MA</div>
+        </div>
+        <div class="stats">
+          <span><strong>19</strong> pieces</span>
+          <span><strong>5.0</strong> ★</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Become a Vendor -->
+<section class="become-vendor">
+  <div class="container bv-grid">
+    <div class="bv-copy">
+      <span class="eyebrow">For Makers</span>
+      <h2 class="h1" style="color: var(--paper);">Sell where your work belongs.</h2>
+      <p>Maison Oré partners with a limited number of new houses each quarter. Our team handles curation, provenance verification, storytelling, and white-glove fulfillment — you focus on the work.</p>
+      <a href="sell.html" class="btn btn-sky">
+        Apply to sell
+        <span class="arrow">→</span>
+      </a>
+    </div>
+    <div class="bv-stats">
+      <div class="bv-stat">
+        <div class="num tabular">12%</div>
+        <div class="lbl">Platform commission</div>
+      </div>
+      <div class="bv-stat">
+        <div class="num tabular">7 days</div>
+        <div class="lbl">Avg. approval time</div>
+      </div>
+      <div class="bv-stat">
+        <div class="num tabular">$4.2M</div>
+        <div class="lbl">Paid to vendors YTD</div>
+      </div>
+      <div class="bv-stat">
+        <div class="num tabular">48hr</div>
+        <div class="lbl">Payout on sale</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brand footer-brand">
+          <span class="brand-mark"></span>
+          Maison Oré
+        </div>
+        <p class="footer-desc">A curated marketplace for objects of quiet consequence — verified at the source, delivered with care.</p>
+      </div>
+      <div>
+        <h5>Shop</h5>
+        <ul>
+          <li><a href="shop.html">All Collections</a></li>
+          <li><a href="shop.html">Ceramics</a></li>
+          <li><a href="shop.html">Textiles</a></li>
+          <li><a href="shop.html">Objets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Vendors</h5>
+        <ul>
+          <li><a href="sell.html">Become a Vendor</a></li>
+          <li><a href="dashboard.html">Vendor Login</a></li>
+          <li><a href="#">Vendor Standards</a></li>
+          <li><a href="#">Commission Schedule</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Maison</h5>
+        <ul>
+          <li><a href="#">Our Standard</a></li>
+          <li><a href="#">Provenance Team</a></li>
+          <li><a href="#">Journal</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Maison Oré. All work verified.</span>
+      <span>Privacy · Terms · Cookies</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

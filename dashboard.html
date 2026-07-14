@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — Maison Oré</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css" />
+<style>
+  /* ============ DASHBOARD ============ */
+  body { background: var(--cream); }
+
+  .dash-shell {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--paper);
+    border-right: 1px solid var(--ink-12);
+    padding: 28px 24px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--ink-12);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Role toggle */
+  .role-toggle {
+    display: flex;
+    padding: 4px;
+    background: var(--cream);
+    margin-top: 24px;
+    border: 1px solid var(--ink-12);
+  }
+  .role-btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-70);
+    transition: all 0.24s ease;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .role-btn.active {
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--gold);
+  }
+  .role-btn svg { width: 14px; height: 14px; }
+
+  .nav-section {
+    margin-top: 32px;
+    padding-bottom: 12px;
+  }
+  .nav-section-title {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-50);
+    padding: 0 12px 12px;
+  }
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+  }
+  .sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--ink-70);
+    transition: all 0.2s ease;
+    border-left: 2px solid transparent;
+  }
+  .sidebar-nav a:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+  .sidebar-nav a.active {
+    background: var(--cream);
+    color: var(--ink);
+    border-left-color: var(--gold);
+  }
+  .sidebar-nav svg { width: 16px; height: 16px; stroke-width: 1.4; }
+  .sidebar-nav .count {
+    margin-left: auto;
+    font-size: 10px;
+    padding: 2px 6px;
+    background: var(--gold);
+    color: var(--paper);
+    letter-spacing: 0.08em;
+  }
+
+  .sidebar-user {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid var(--ink-12);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .sidebar-user .av {
+    width: 36px; height: 36px;
+    background: var(--sky-tint);
+    display: grid; place-items: center;
+    color: var(--sky-deep);
+    font-size: 13px; font-weight: 500;
+    border: 1px solid var(--ink-12);
+  }
+  .sidebar-user .name { font-size: 13px; font-weight: 500; }
+  .sidebar-user .role { font-size: 10px; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2px; }
+
+  /* Main */
+  .main {
+    padding: 28px 40px 40px;
+    background: var(--cream);
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--ink-12);
+    margin-bottom: 32px;
+  }
+  .topbar h1 { font-size: 28px; font-weight: 300; letter-spacing: -0.02em; }
+  .topbar .eyebrow { display: block; margin-bottom: 4px; }
+  .topbar-actions {
+    display: flex; gap: 12px; align-items: center;
+  }
+  .date-picker {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: var(--paper);
+    border: 1px solid var(--ink-12);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-70);
+    cursor: pointer;
+  }
+  .date-picker svg { width: 14px; height: 14px; }
+
+  /* Stat cards */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--paper);
+    padding: 24px;
+    border: 1px solid var(--ink-12);
+    position: relative;
+  }
+  .stat-card .lbl {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-50);
+  }
+  .stat-card .val {
+    font-size: 32px; font-weight: 300; letter-spacing: -0.02em;
+    margin-top: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-card .delta {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    margin-top: 8px;
+    padding: 3px 8px;
+    background: var(--sky-tint);
+    color: var(--sky-deep);
+  }
+  .stat-card .delta.down { background: rgba(184,137,74,0.12); color: var(--gold); }
+  .stat-card .spark {
+    position: absolute;
+    right: 20px; bottom: 20px;
+    width: 80px; height: 30px;
+  }
+
+  /* Widget grid */
+  .widget-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .widget {
+    background: var(--paper);
+    border: 1px solid var(--ink-12);
+    padding: 28px;
+    position: relative;
+  }
+  .widget-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--ink-12);
+    margin-bottom: 24px;
+  }
+  .widget-head h2 { font-size: 17px; font-weight: 500; letter-spacing: -0.005em; }
+  .widget-head .eyebrow { display: block; margin-bottom: 4px; }
+  .widget-head .link {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--gold); padding-bottom: 2px; border-bottom: 1px solid var(--gold);
+  }
+
+  /* Revenue chart */
+  .chart-wrap { position: relative; }
+  .chart-legend {
+    display: flex; gap: 24px; margin-bottom: 20px;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-70);
+  }
+  .chart-legend .dot { width: 8px; height: 8px; display: inline-block; margin-right: 8px; vertical-align: middle; }
+  .chart-legend .dot.sky { background: var(--sky); }
+  .chart-legend .dot.gold { background: var(--gold); }
+  .chart-legend .val { color: var(--ink); font-weight: 500; margin-left: 12px; font-variant-numeric: tabular-nums; }
+
+  .chart {
+    width: 100%; height: 260px;
+  }
+
+  /* Top products */
+  .top-list { display: flex; flex-direction: column; gap: 0; }
+  .top-item {
+    display: grid;
+    grid-template-columns: 24px 40px 1fr auto;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--ink-06);
+    align-items: center;
+  }
+  .top-item:last-child { border-bottom: none; }
+  .top-item .rank {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .top-item .thumb {
+    width: 40px; height: 40px;
+    background: var(--cream);
+    background-image: repeating-linear-gradient(135deg, transparent 0, transparent 4px, rgba(11,31,58,0.05) 4px, rgba(11,31,58,0.05) 5px);
+    border: 1px solid var(--ink-12);
+  }
+  .top-item .body .name { font-size: 13px; font-weight: 500; }
+  .top-item .body .meta { font-size: 11px; color: var(--ink-50); margin-top: 2px; }
+  .top-item .val { font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; text-align: right; }
+  .top-item .val .sub { display: block; font-size: 10px; color: var(--ink-50); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+  /* Orders table */
+  .orders-widget { grid-column: 1 / -1; }
+  .orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .orders-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-50);
+    font-weight: 500;
+    border-bottom: 1px solid var(--ink-12);
+    background: var(--cream);
+  }
+  .orders-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--ink-06);
+    vertical-align: middle;
+  }
+  .orders-table tr:hover td { background: rgba(124, 178, 214, 0.04); }
+  .orders-table .oid {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-70);
+    letter-spacing: 0.08em;
+  }
+  .orders-table .customer {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .orders-table .customer .av {
+    width: 28px; height: 28px;
+    background: var(--sky-tint);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 500;
+    color: var(--sky-deep);
+    border: 1px solid var(--ink-12);
+  }
+  .orders-table .customer .name { font-weight: 500; }
+  .orders-table .customer .email { font-size: 11px; color: var(--ink-50); margin-top: 2px; }
+  .orders-table .amount { font-variant-numeric: tabular-nums; font-weight: 500; }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .status .dot { width: 5px; height: 5px; border-radius: 50%; }
+  .status.paid { border-color: var(--sky); color: var(--sky-deep); background: var(--sky-tint); }
+  .status.paid .dot { background: var(--sky-deep); }
+  .status.pending { border-color: var(--gold); color: var(--gold); background: var(--gold-tint); }
+  .status.pending .dot { background: var(--gold); }
+  .status.shipped { border-color: var(--ink-30); color: var(--ink-70); background: var(--cream); }
+  .status.shipped .dot { background: var(--ink-70); }
+  .status.review { border-color: var(--ink-30); color: var(--ink-70); background: var(--paper); }
+  .status.review .dot { background: var(--ink-30); }
+
+  .row-action {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-70);
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+  .row-action:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* Admin-only surface */
+  .admin-only { display: none; }
+  body[data-role="admin"] .admin-only { display: block; }
+  body[data-role="admin"] .vendor-only { display: none; }
+  body[data-role="admin"] .role-title { }
+
+  @media (max-width: 1200px) {
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .widget-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .dash-shell { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; }
+    .main { padding: 24px; }
+  }
+</style>
+</head>
+<body data-role="vendor">
+
+<div class="dash-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark"></span>
+      Maison Oré
+    </div>
+
+    <div class="role-toggle" role="tablist">
+      <button class="role-btn active" data-role="vendor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-6 9 6v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/></svg>
+        Vendor
+      </button>
+      <button class="role-btn" data-role="admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/><path d="m19 4 1 2 2 1-2 1-1 2-1-2-2-1 2-1 1-2z"/></svg>
+        Admin
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Overview</div>
+      <ul class="sidebar-nav">
+        <li><a href="#" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          Dashboard
+        </a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18l-2 12H5L3 6z"/><path d="M8 6V4a4 4 0 0 1 8 0v2"/></svg>
+          Orders <span class="count">7</span>
+        </a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2 3 6v6c0 5 4 9 9 10 5-1 9-5 9-10V6l-9-4z"/></svg>
+          Products
+        </a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M4 8l8-6 8 6M4 16l8 6 8-6"/></svg>
+          Payouts
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section vendor-only">
+      <div class="nav-section-title">Studio</div>
+      <ul class="sidebar-nav">
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          Storefront
+        </a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"/></svg>
+          Messages <span class="count">3</span>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section admin-only">
+      <div class="nav-section-title">Platform</div>
+      <ul class="sidebar-nav">
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1A4 4 0 0 1 16 11"/></svg>
+          Vendors <span class="count">4</span>
+        </a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Approvals
+        </a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Analytics
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Account</div>
+      <ul class="sidebar-nav">
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.7l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.7-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.7.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.7 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.7.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.7-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.7V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+          Settings
+        </a></li>
+        <li><a href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Back to store
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="av" id="userAv">SH</div>
+      <div>
+        <div class="name" id="userName">Ines Halden</div>
+        <div class="role" id="userRole">Vendor · Studio Halden</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <span class="eyebrow" id="topEyebrow">Vendor Dashboard</span>
+        <h1 id="topTitle">Good afternoon, Ines</h1>
+      </div>
+      <div class="topbar-actions">
+        <button class="date-picker">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Last 30 days
+        </button>
+        <button class="btn btn-primary btn-sm">
+          <span id="ctaLabel">List new piece</span>
+          <span class="arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="lbl">Revenue</div>
+        <div class="val tabular" id="statRevenue">$24,840</div>
+        <span class="delta">↑ 12.4%</span>
+        <svg class="spark" viewBox="0 0 80 30" preserveAspectRatio="none">
+          <polyline points="0,22 10,18 20,20 30,14 40,16 50,10 60,12 70,6 80,8" fill="none" stroke="#7CB2D6" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="stat-card">
+        <div class="lbl">Orders</div>
+        <div class="val tabular" id="statOrders">142</div>
+        <span class="delta">↑ 8.1%</span>
+        <svg class="spark" viewBox="0 0 80 30" preserveAspectRatio="none">
+          <polyline points="0,20 10,22 20,16 30,18 40,12 50,14 60,8 70,10 80,4" fill="none" stroke="#B8894A" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="stat-card">
+        <div class="lbl">Avg. Order</div>
+        <div class="val tabular" id="statAvg">$174.93</div>
+        <span class="delta">↑ 3.9%</span>
+        <svg class="spark" viewBox="0 0 80 30" preserveAspectRatio="none">
+          <polyline points="0,16 10,14 20,18 30,12 40,10 50,14 60,8 70,6 80,10" fill="none" stroke="#7CB2D6" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="stat-card">
+        <div class="lbl" id="stat4Label">Payout Pending</div>
+        <div class="val tabular" id="stat4Val">$3,120</div>
+        <span class="delta down">↓ 2.1%</span>
+        <svg class="spark" viewBox="0 0 80 30" preserveAspectRatio="none">
+          <polyline points="0,10 10,12 20,8 30,14 40,10 50,18 60,14 70,20 80,16" fill="none" stroke="#B8894A" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- WIDGETS -->
+    <div class="widget-grid">
+      <!-- Revenue Chart -->
+      <div class="widget">
+        <div class="widget-head">
+          <div>
+            <span class="eyebrow">Revenue Overview</span>
+            <h2>Last 30 days performance</h2>
+          </div>
+          <a href="#" class="link">Full report →</a>
+        </div>
+
+        <div class="chart-legend">
+          <span><span class="dot sky"></span>Revenue <span class="val">$24,840</span></span>
+          <span><span class="dot gold"></span>Orders <span class="val">142</span></span>
+        </div>
+
+        <div class="chart-wrap">
+          <svg class="chart" viewBox="0 0 700 260" preserveAspectRatio="none">
+            <!-- Grid lines -->
+            <g stroke="rgba(11,31,58,0.06)" stroke-width="1">
+              <line x1="0" y1="40" x2="700" y2="40"/>
+              <line x1="0" y1="100" x2="700" y2="100"/>
+              <line x1="0" y1="160" x2="700" y2="160"/>
+              <line x1="0" y1="220" x2="700" y2="220"/>
+            </g>
+            <!-- Y labels -->
+            <g fill="rgba(11,31,58,0.5)" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">
+              <text x="4" y="36">$30K</text>
+              <text x="4" y="96">$22K</text>
+              <text x="4" y="156">$14K</text>
+              <text x="4" y="216">$6K</text>
+            </g>
+            <!-- Sky area -->
+            <path d="M 50,180 L 100,155 L 150,165 L 200,130 L 250,140 L 300,110 L 350,120 L 400,95 L 450,80 L 500,90 L 550,60 L 600,70 L 650,45 L 650,240 L 50,240 Z"
+              fill="rgba(124,178,214,0.15)"/>
+            <!-- Sky line -->
+            <path d="M 50,180 L 100,155 L 150,165 L 200,130 L 250,140 L 300,110 L 350,120 L 400,95 L 450,80 L 500,90 L 550,60 L 600,70 L 650,45"
+              fill="none" stroke="#7CB2D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Gold line -->
+            <path d="M 50,200 L 100,190 L 150,180 L 200,170 L 250,175 L 300,155 L 350,160 L 400,140 L 450,130 L 500,125 L 550,110 L 600,105 L 650,95"
+              fill="none" stroke="#B8894A" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <!-- Points on sky line -->
+            <g fill="#7CB2D6">
+              <circle cx="50" cy="180" r="3"/>
+              <circle cx="200" cy="130" r="3"/>
+              <circle cx="350" cy="120" r="3"/>
+              <circle cx="500" cy="90" r="3"/>
+              <circle cx="650" cy="45" r="3"/>
+            </g>
+            <!-- Highlighted point -->
+            <circle cx="550" cy="60" r="5" fill="#B8894A"/>
+            <line x1="550" y1="60" x2="550" y2="240" stroke="#B8894A" stroke-dasharray="2,3" stroke-width="1"/>
+            <!-- Tooltip -->
+            <g transform="translate(490, 20)">
+              <rect x="0" y="0" width="120" height="34" fill="#0B1F3A" stroke="#B8894A"/>
+              <text x="10" y="15" fill="#B8894A" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1.2">JUN 24</text>
+              <text x="10" y="28" fill="#FAFAF7" font-family="Inter, sans-serif" font-size="11" font-weight="500">$2,840 · 18 ord.</text>
+            </g>
+            <!-- X labels -->
+            <g fill="rgba(11,31,58,0.5)" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="1.5">
+              <text x="45" y="256">JUN 01</text>
+              <text x="195" y="256">JUN 08</text>
+              <text x="345" y="256">JUN 15</text>
+              <text x="495" y="256">JUN 22</text>
+              <text x="640" y="256">JUN 30</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Top Products -->
+      <div class="widget">
+        <div class="widget-head">
+          <div>
+            <span class="eyebrow">Top Products</span>
+            <h2>Best sellers, 30 days</h2>
+          </div>
+          <a href="#" class="link">All →</a>
+        </div>
+        <div class="top-list" id="topList">
+          <div class="top-item">
+            <div class="rank">01</div>
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="name">Raku Tea Vessel</div>
+              <div class="meta">Iron-Glazed · Signed</div>
+            </div>
+            <div class="val">$14,720<span class="sub">8 sold</span></div>
+          </div>
+          <div class="top-item">
+            <div class="rank">02</div>
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="name">Shino Vase</div>
+              <div class="meta">Winter Firing · Ed. 8</div>
+            </div>
+            <div class="val">$8,560<span class="sub">4 sold</span></div>
+          </div>
+          <div class="top-item">
+            <div class="rank">03</div>
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="name">Stoneware Carafe Set</div>
+              <div class="meta">Ash Glaze · Pair</div>
+            </div>
+            <div class="val">$4,620<span class="sub">12 sold</span></div>
+          </div>
+          <div class="top-item">
+            <div class="rank">04</div>
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="name">Ash-Glazed Vessel</div>
+              <div class="meta">Large · Ed. 6</div>
+            </div>
+            <div class="val">$2,760<span class="sub">3 sold</span></div>
+          </div>
+          <div class="top-item">
+            <div class="rank">05</div>
+            <div class="thumb"></div>
+            <div class="body">
+              <div class="name">Barro Negro Cups</div>
+              <div class="meta">Set of 4</div>
+            </div>
+            <div class="val">$1,440<span class="sub">8 sold</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS TABLE -->
+    <div class="widget orders-widget">
+      <div class="widget-head">
+        <div>
+          <span class="eyebrow">Recent Orders</span>
+          <h2 id="ordersTitle">7 orders need your attention</h2>
+        </div>
+        <a href="#" class="link">View all orders →</a>
+      </div>
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th id="colCustomer">Customer</th>
+            <th class="admin-only" style="display:none;">Vendor</th>
+            <th>Item</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th style="text-align:right;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody">
+          <!-- populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+  const vendorOrders = [
+    { id: "MO-24081", cust: "Camille R.", init: "CR", email: "c.rousseau@paris.fr", item: "Raku Tea Vessel", price: "$1,840", status: "paid" },
+    { id: "MO-24080", cust: "Henrik L.", init: "HL", email: "h.lindstrom@se.co", item: "Stoneware Carafe Set", price: "$385", status: "shipped" },
+    { id: "MO-24079", cust: "Yuki T.", init: "YT", email: "y.tanaka@osaka.jp", item: "Shino Vase, Winter Firing", price: "$2,140", status: "pending" },
+    { id: "MO-24078", cust: "Marcus W.", init: "MW", email: "m.weiss@berlin.de", item: "Ash-Glazed Vessel, Large", price: "$920", status: "paid" },
+    { id: "MO-24077", cust: "Amélie D.", init: "AD", email: "a.dupont@lyon.fr", item: "Raku Tea Vessel", price: "$1,840", status: "review" },
+    { id: "MO-24076", cust: "Jonas B.", init: "JB", email: "jonas.b@oslo.no", item: "Stoneware Carafe Set", price: "$385", status: "shipped" },
+    { id: "MO-24075", cust: "Rina O.", init: "RO", email: "rina.o@kyoto.jp", item: "Shino Vase, Winter Firing", price: "$2,140", status: "paid" },
+  ];
+
+  const adminOrders = [
+    { id: "MO-24081", cust: "Camille R.", init: "CR", email: "c.rousseau@paris.fr", vendor: "Atelier Kōgei", item: "Raku Tea Vessel", price: "$1,840", status: "paid" },
+    { id: "MO-24080", cust: "Henrik L.", init: "HL", email: "h.lindstrom@se.co", vendor: "Studio Halden", item: "Stoneware Carafe Set", price: "$385", status: "shipped" },
+    { id: "MO-24079", cust: "Yuki T.", init: "YT", email: "y.tanaka@osaka.jp", vendor: "Atelier Kōgei", item: "Shino Vase, Winter Firing", price: "$2,140", status: "pending" },
+    { id: "MO-24078", cust: "Marcus W.", init: "MW", email: "m.weiss@berlin.de", vendor: "Studio Halden", item: "Ash-Glazed Vessel, Large", price: "$920", status: "paid" },
+    { id: "MO-24077", cust: "Amélie D.", init: "AD", email: "a.dupont@lyon.fr", vendor: "Maison Ferrière", item: "Terracotta Amphora", price: "$620", status: "review" },
+    { id: "MO-24076", cust: "Jonas B.", init: "JB", email: "jonas.b@oslo.no", vendor: "Herrera & Ono", item: "Tadelakt Serving Bowl", price: "$290", status: "shipped" },
+    { id: "MO-24075", cust: "Rina O.", init: "RO", email: "rina.o@kyoto.jp", vendor: "Barros Ceramica", item: "Barro Negro Cups", price: "$180", status: "paid" },
+    { id: "MO-24074", cust: "Otto K.", init: "OK", email: "otto.k@munich.de", vendor: "Atelier Kōgei", item: "Raku Tea Vessel", price: "$1,840", status: "pending" },
+  ];
+
+  function renderOrders() {
+    const role = document.body.dataset.role;
+    const data = role === "admin" ? adminOrders : vendorOrders;
+    const showVendor = role === "admin";
+    document.querySelectorAll("th.admin-only").forEach(th => th.style.display = showVendor ? "table-cell" : "none");
+
+    document.getElementById("ordersBody").innerHTML = data.map(o => `
+      <tr>
+        <td><span class="oid">${o.id}</span></td>
+        <td>
+          <div class="customer">
+            <div class="av">${o.init}</div>
+            <div>
+              <div class="name">${o.cust}</div>
+              <div class="email">${o.email}</div>
+            </div>
+          </div>
+        </td>
+        ${showVendor ? `<td><span style="font-size:13px; font-weight:500;">${o.vendor}</span></td>` : ""}
+        <td>${o.item}</td>
+        <td><span class="amount">${o.price}</span></td>
+        <td><span class="status ${o.status}"><span class="dot"></span>${o.status}</span></td>
+        <td style="text-align:right;"><a href="#" class="row-action">View →</a></td>
+      </tr>
+    `).join("");
+  }
+
+  // Role toggle
+  const roleData = {
+    vendor: {
+      eyebrow: "Vendor Dashboard",
+      title: "Good afternoon, Ines",
+      cta: "List new piece",
+      revenue: "$24,840",
+      orders: "142",
+      avg: "$174.93",
+      stat4Label: "Payout Pending",
+      stat4Val: "$3,120",
+      ordersTitle: "7 orders need your attention",
+      user: { name: "Ines Halden", role: "Vendor · Studio Halden", av: "SH" }
+    },
+    admin: {
+      eyebrow: "Admin Dashboard",
+      title: "Platform overview",
+      cta: "Review applications",
+      revenue: "$1.24M",
+      orders: "3,847",
+      avg: "$322.14",
+      stat4Label: "Active Vendors",
+      stat4Val: "240",
+      ordersTitle: "12 orders across 8 vendors need review",
+      user: { name: "Marcus Chen", role: "Admin · Curation Team", av: "MC" }
+    }
+  };
+
+  function setRole(role) {
+    document.body.dataset.role = role;
+    const d = roleData[role];
+    document.getElementById("topEyebrow").textContent = d.eyebrow;
+    document.getElementById("topTitle").textContent = d.title;
+    document.getElementById("ctaLabel").textContent = d.cta;
+    document.getElementById("statRevenue").textContent = d.revenue;
+    document.getElementById("statOrders").textContent = d.orders;
+    document.getElementById("statAvg").textContent = d.avg;
+    document.getElementById("stat4Label").textContent = d.stat4Label;
+    document.getElementById("stat4Val").textContent = d.stat4Val;
+    document.getElementById("ordersTitle").textContent = d.ordersTitle;
+    document.getElementById("userName").textContent = d.user.name;
+    document.getElementById("userRole").textContent = d.user.role;
+    document.getElementById("userAv").textContent = d.user.av;
+
+    document.querySelectorAll(".role-btn").forEach(b => b.classList.toggle("active", b.dataset.role === role));
+    localStorage.setItem("mo_role", role);
+    renderOrders();
+  }
+
+  document.querySelectorAll(".role-btn").forEach(b => {
+    b.addEventListener("click", () => setRole(b.dataset.role));
+  });
+
+  const savedRole = localStorage.getItem("mo_role") || "vendor";
+  setRole(savedRole);
+</script>
+
+</body>
+</html>
