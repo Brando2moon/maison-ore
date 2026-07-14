@@ -10,295 +10,241 @@
 <link rel="stylesheet" href="shared.css"/>
 <style>
   /* ============ SHOP PAGE ============ */
-
-  .shop-header {
-    padding: 56px 0 32px;
-    border-bottom: 1px solid var(--ink-12);
-  }
-  .breadcrumb {
-    display: flex;
-    gap: 12px;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-50);
-    margin-bottom: 24px;
-  }
+  .shop-header { padding: 56px 0 32px; border-bottom: 1px solid var(--ink-12); }
+  .breadcrumb { display: flex; gap: 12px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-50); margin-bottom: 24px; }
   .breadcrumb a { color: var(--ink-70); }
   .breadcrumb .sep { color: var(--gold); }
-  .shop-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 40px;
-    flex-wrap: wrap;
-  }
+  .shop-title-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap; }
   .shop-title-row h1 { max-width: 640px; }
   .shop-title-row p { margin-top: 16px; color: var(--ink-70); max-width: 560px; }
-  .shop-title-row .count {
-    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--ink-50);
-  }
+  .shop-title-row .count { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-50); }
   .shop-title-row .count strong { color: var(--gold); font-weight: 500; }
 
-  /* Toolbar */
-  .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--ink-12);
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  .filters {
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
-  .filter-chip {
-    padding: 8px 16px;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border: 1px solid var(--ink-12);
-    color: var(--ink-70);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: var(--paper);
-  }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--ink-12); gap: 24px; flex-wrap: wrap; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-chip { padding: 8px 16px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid var(--ink-12); color: var(--ink-70); cursor: pointer; transition: all 0.2s ease; background: var(--paper); }
   .filter-chip:hover { border-color: var(--gold); color: var(--gold); }
-  .filter-chip.active {
-    background: var(--ink); color: var(--paper); border-color: var(--ink);
-  }
+  .filter-chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .filter-chip.active:hover { color: var(--gold-soft); border-color: var(--ink); }
-  .toolbar-right {
-    display: flex; gap: 16px; align-items: center;
-    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink-70);
-  }
-  .toolbar-right select {
-    padding: 8px 12px;
-    border: 1px solid var(--ink-12);
-    background: var(--paper);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink);
-    cursor: pointer;
-  }
+  .toolbar-right { display: flex; gap: 16px; align-items: center; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-70); }
+  .toolbar-right select { padding: 8px 12px; border: 1px solid var(--ink-12); background: var(--paper); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); cursor: pointer; }
 
-  /* Split layout */
-  .shop-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 0;
-    min-height: 900px;
-    border-bottom: 1px solid var(--ink-12);
-  }
-  .listing {
-    border-right: 1px solid var(--ink-12);
-    padding: 32px var(--gutter) 48px 0;
-    max-height: calc(100vh - 68px);
-    overflow-y: auto;
-    position: sticky;
-    top: 68px;
-  }
+  .shop-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 0; min-height: 900px; border-bottom: 1px solid var(--ink-12); }
+  .listing { border-right: 1px solid var(--ink-12); padding: 32px var(--gutter) 48px 0; max-height: calc(100vh - 68px); overflow-y: auto; position: sticky; top: 68px; }
   .listing::-webkit-scrollbar { width: 6px; }
   .listing::-webkit-scrollbar-thumb { background: var(--ink-12); }
-
-  .products-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .product-card {
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-    position: relative;
-  }
-  .product-card .thumb {
-    aspect-ratio: 4 / 5;
-    position: relative;
-    transition: transform 0.3s ease;
-  }
+  .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .product-card { cursor: pointer; transition: opacity 0.2s ease; position: relative; }
+  .product-card .thumb { aspect-ratio: 4 / 5; position: relative; transition: transform 0.3s ease; }
   .product-card:hover .thumb { transform: translateY(-2px); }
-  .product-card.selected .thumb::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border: 2px solid var(--gold);
-    pointer-events: none;
-  }
+  .product-card.selected .thumb::after { content: ""; position: absolute; inset: 0; border: 2px solid var(--gold); pointer-events: none; }
   .product-card .thumb .placeholder { height: 100%; }
-  .product-card .badge {
-    position: absolute;
-    top: 10px; left: 10px;
-    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
-    padding: 4px 8px;
-    background: var(--paper);
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    z-index: 3;
-  }
-  .product-card .fav {
-    position: absolute;
-    top: 10px; right: 10px;
-    width: 28px; height: 28px;
-    background: var(--paper);
-    display: grid; place-items: center;
-    border: 1px solid var(--ink-12);
-    z-index: 3;
-    color: var(--ink-70);
-    transition: color 0.2s ease;
-  }
+  .product-card .badge { position: absolute; top: 10px; left: 10px; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 8px; background: var(--paper); color: var(--gold); border: 1px solid var(--gold); z-index: 3; }
+  .product-card .fav { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; background: var(--paper); display: grid; place-items: center; border: 1px solid var(--ink-12); z-index: 3; color: var(--ink-70); transition: color 0.2s ease; }
   .product-card .fav:hover { color: var(--gold); }
   .product-card .fav svg { width: 14px; height: 14px; }
-  .product-card .info {
-    margin-top: 12px;
-    padding-top: 12px;
-  }
-  .product-card .vendor {
-    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--gold);
-  }
-  .product-card .name {
-    font-size: 14px; margin-top: 4px;
-    letter-spacing: -0.005em;
-  }
-  .product-card .price {
-    font-size: 13px; font-weight: 500;
-    margin-top: 6px;
-    font-variant-numeric: tabular-nums;
-  }
+  .product-card .info { margin-top: 12px; padding-top: 12px; }
+  .product-card .vendor { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+  .product-card .name { font-size: 14px; margin-top: 4px; letter-spacing: -0.005em; }
+  .product-card .price { font-size: 13px; font-weight: 500; margin-top: 6px; font-variant-numeric: tabular-nums; }
 
   /* Detail */
-  .detail {
-    padding: 48px var(--gutter) 48px 40px;
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 40px;
-    align-items: start;
-  }
-  .detail-gallery {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .detail-main {
-    aspect-ratio: 4 / 5;
-    position: relative;
-  }
+  .detail { padding: 48px var(--gutter) 48px 40px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: start; }
+  .detail-gallery { display: flex; flex-direction: column; gap: 12px; }
+  .detail-main { aspect-ratio: 4 / 5; position: relative; }
   .detail-main .placeholder { height: 100%; }
-  .detail-thumbs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-  }
-  .detail-thumbs .placeholder {
-    aspect-ratio: 1;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-  }
+  .detail-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .detail-thumbs .placeholder { aspect-ratio: 1; cursor: pointer; transition: opacity 0.2s ease; }
   .detail-thumbs .placeholder:hover { opacity: 0.75; }
-  .detail-thumbs .placeholder.active {
-    outline: 1px solid var(--gold);
-    outline-offset: -1px;
-  }
-
-  .detail-info {
-    position: sticky;
-    top: 100px;
-  }
-  .detail-vendor {
-    display: flex; align-items: center; gap: 12px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--ink-12);
-  }
-  .detail-vendor .av {
-    width: 36px; height: 36px;
-    background: var(--sky-tint);
-    display: grid; place-items: center;
-    color: var(--sky-deep);
-    font-size: 12px; font-weight: 500;
-    border: 1px solid var(--ink-12);
-  }
+  .detail-thumbs .placeholder.active { outline: 1px solid var(--gold); outline-offset: -1px; }
+  .detail-info { position: sticky; top: 100px; }
+  .detail-vendor { display: flex; align-items: center; gap: 12px; padding-bottom: 20px; border-bottom: 1px solid var(--ink-12); }
+  .detail-vendor .av { width: 36px; height: 36px; background: var(--sky-tint); display: grid; place-items: center; color: var(--sky-deep); font-size: 12px; font-weight: 500; border: 1px solid var(--ink-12); }
   .detail-vendor .info { flex: 1; }
   .detail-vendor .name { font-size: 13px; font-weight: 500; }
   .detail-vendor .loc { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-50); margin-top: 2px; }
-  .detail-vendor .view-shop {
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    padding-bottom: 2px; border-bottom: 1px solid var(--gold);
-    color: var(--gold);
-  }
-
-  .detail-title {
-    font-size: 32px; font-weight: 300;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
-    margin-top: 24px;
-  }
+  .detail-vendor .view-shop { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding-bottom: 2px; border-bottom: 1px solid var(--gold); color: var(--gold); }
+  .detail-title { font-size: 32px; font-weight: 300; letter-spacing: -0.025em; line-height: 1.1; margin-top: 24px; }
   .detail-eyebrow { color: var(--gold); }
-
-  .detail-price-row {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-top: 24px;
-    padding: 24px 0;
-    border-top: 1px solid var(--ink-12);
-    border-bottom: 1px solid var(--ink-12);
-  }
-  .detail-price {
-    font-size: 32px; font-weight: 300; letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
-  }
+  .detail-price-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 24px; padding: 24px 0; border-top: 1px solid var(--ink-12); border-bottom: 1px solid var(--ink-12); }
+  .detail-price { font-size: 32px; font-weight: 300; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
   .detail-avail { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-70); }
   .detail-avail .dot { display: inline-block; width: 6px; height: 6px; background: var(--sky-deep); border-radius: 50%; margin-right: 6px; vertical-align: middle; }
-
-  .detail-desc {
-    margin-top: 24px;
-    color: var(--ink-70);
-    line-height: 1.75;
-    font-size: 14px;
-  }
-
-  .detail-specs {
-    margin-top: 32px;
-    border-top: 1px solid var(--ink-12);
-    padding-top: 24px;
-  }
-  .spec-row {
-    display: flex; justify-content: space-between;
-    padding: 10px 0;
-    font-size: 13px;
-    border-bottom: 1px solid var(--ink-06);
-  }
+  .detail-desc { margin-top: 24px; color: var(--ink-70); line-height: 1.75; font-size: 14px; }
+  .detail-specs { margin-top: 32px; border-top: 1px solid var(--ink-12); padding-top: 24px; }
+  .spec-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 13px; border-bottom: 1px solid var(--ink-06); }
   .spec-row .k { color: var(--ink-50); letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px; }
   .spec-row .v { color: var(--ink); font-weight: 400; }
-
-  .detail-actions {
-    display: flex; gap: 12px; margin-top: 32px;
-  }
+  .detail-actions { display: flex; gap: 12px; margin-top: 32px; }
   .detail-actions .btn-primary { flex: 1; }
-
-  .detail-badges {
-    display: flex; gap: 8px;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid var(--ink-12);
-    flex-wrap: wrap;
-  }
-  .badge-line {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 12px;
-    background: var(--gold-tint);
-    color: var(--gold);
-    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-  }
+  .detail-badges { display: flex; gap: 8px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--ink-12); flex-wrap: wrap; }
+  .badge-line { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--gold-tint); color: var(--gold); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
   .badge-line svg { width: 12px; height: 12px; stroke-width: 1.6; }
+
+  /* ============ CART BADGE ============ */
+  .cart-badge {
+    position: absolute;
+    top: -6px; right: -6px;
+    width: 16px; height: 16px;
+    background: var(--gold);
+    color: var(--paper);
+    font-size: 9px;
+    font-weight: 600;
+    border-radius: 50%;
+    display: none;
+    place-items: center;
+    font-family: "JetBrains Mono", monospace;
+  }
+  .cart-badge.visible { display: grid; }
+  .icon-btn { position: relative; }
+
+  /* ============ CART DRAWER ============ */
+  .cart-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(11,31,58,0.35);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+  .cart-drawer {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 400px;
+    max-width: 100vw;
+    background: var(--paper);
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.32s ease;
+    border-left: 1px solid var(--ink-12);
+  }
+  .cart-drawer.open { transform: translateX(0); }
+
+  .cart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--ink-12);
+  }
+  .cart-head h3 { font-size: 14px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; }
+  .cart-close {
+    width: 32px; height: 32px;
+    display: grid; place-items: center;
+    border: 1px solid var(--ink-12);
+    color: var(--ink-70);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background: none;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .cart-close:hover { border-color: var(--gold); color: var(--gold); }
+
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 28px;
+  }
+  .cart-items::-webkit-scrollbar { width: 4px; }
+  .cart-items::-webkit-scrollbar-thumb { background: var(--ink-12); }
+
+  .cart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--ink-50);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-align: center;
+    gap: 12px;
+  }
+  .cart-empty svg { width: 32px; height: 32px; stroke-width: 1; opacity: 0.4; }
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 14px;
+    align-items: start;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--ink-06);
+  }
+  .cart-item-thumb {
+    width: 56px; height: 70px;
+    background: var(--cream);
+    background-image: repeating-linear-gradient(135deg, transparent 0, transparent 8px, rgba(11,31,58,0.04) 8px, rgba(11,31,58,0.04) 9px);
+    border: 1px solid var(--ink-12);
+    display: grid;
+    place-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 8px;
+    color: var(--ink-30);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .cart-item-info { display: flex; flex-direction: column; gap: 4px; }
+  .cart-item-vendor { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+  .cart-item-name { font-size: 13px; line-height: 1.3; }
+  .cart-item-price { font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .cart-item-qty {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 8px;
+  }
+  .qty-btn {
+    width: 22px; height: 22px;
+    border: 1px solid var(--ink-12);
+    display: grid; place-items: center;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    background: none;
+    color: var(--ink);
+    transition: all 0.2s ease;
+  }
+  .qty-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .qty-num { font-size: 12px; min-width: 16px; text-align: center; font-variant-numeric: tabular-nums; }
+  .cart-item-remove {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-30); cursor: pointer; margin-top: 4px;
+    background: none; border: none; padding: 0;
+    transition: color 0.2s ease;
+  }
+  .cart-item-remove:hover { color: var(--gold); }
+
+  .cart-foot {
+    padding: 24px 28px;
+    border-top: 1px solid var(--ink-12);
+  }
+  .cart-subtotal {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .cart-subtotal-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-50); }
+  .cart-subtotal-val { font-size: 28px; font-weight: 300; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .cart-note { font-size: 11px; color: var(--ink-30); letter-spacing: 0.04em; margin-bottom: 20px; }
+  .cart-checkout { width: 100%; }
+
+  /* Added to cart flash */
+  @keyframes flashGold {
+    0% { background: var(--ink); color: var(--paper); }
+    40% { background: var(--gold); color: var(--paper); border-color: var(--gold); }
+    100% { background: var(--ink); color: var(--paper); }
+  }
+  .btn-added { animation: flashGold 0.6s ease forwards; }
 
   @media (max-width: 1100px) {
     .shop-layout { grid-template-columns: 1fr; }
     .listing { border-right: none; border-bottom: 1px solid var(--ink-12); position: static; padding-right: 0; max-height: none; }
     .detail { grid-template-columns: 1fr; padding: 40px 0; }
     .detail-info { position: static; }
+    .cart-drawer { width: 100vw; }
   }
   @media (max-width: 640px) {
     .products-grid { grid-template-columns: 1fr; }
@@ -307,6 +253,30 @@
 </head>
 <body>
 
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- CART DRAWER -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>Your Cart <span id="cartHeadCount" style="color:var(--gold);font-weight:300;"></span></h3>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-2 10H8L6 6z"/><path d="M6 6 4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+      <span>Your cart is empty</span>
+    </div>
+  </div>
+  <div class="cart-foot" id="cartFoot" style="display:none;">
+    <div class="cart-subtotal">
+      <span class="cart-subtotal-label">Total</span>
+      <span class="cart-subtotal-val" id="cartTotal">$0</span>
+    </div>
+    <p class="cart-note">Shipping calculated at checkout · Duties may apply</p>
+    <button class="btn btn-primary btn-lg cart-checkout">Proceed to Checkout <span class="arrow">→</span></button>
+  </div>
+</div>
 
 <!-- NAV -->
 <header class="nav">
@@ -330,8 +300,9 @@
       <button class="icon-btn" aria-label="Account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
       </button>
-      <button class="icon-btn" aria-label="Cart">
+      <button class="icon-btn" aria-label="Cart" onclick="openCart()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-2 10H8L6 6z"/><path d="M6 6 4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
       </button>
     </div>
   </div>
@@ -383,14 +354,10 @@
 
 <!-- Split Layout -->
 <div class="shop-layout container-wide" style="padding-right: var(--gutter);">
-  <!-- LEFT: Listing -->
   <div class="listing" style="padding-left: var(--gutter);">
-    <div class="products-grid" id="products">
-      <!-- populated by JS -->
-    </div>
+    <div class="products-grid" id="products"></div>
   </div>
 
-  <!-- RIGHT: Detail -->
   <div class="detail" id="detail">
     <div class="detail-gallery">
       <div class="detail-main">
@@ -406,40 +373,31 @@
 
     <div class="detail-info">
       <div class="detail-vendor">
-        <div class="av" id="dVendorAv">AK</div>
+        <div class="av" id="dVendorAv">LC</div>
         <div class="info">
-          <div class="name" id="dVendorName">Atelier Kōgei</div>
-          <div class="loc" id="dVendorLoc">Kyōto · Japan</div>
+          <div class="name" id="dVendorName">Lodge Craft</div>
+          <div class="loc" id="dVendorLoc">Pittsburgh · USA</div>
         </div>
         <a href="#" class="view-shop">View shop →</a>
       </div>
 
       <div style="margin-top: 24px;">
-        <span class="eyebrow detail-eyebrow" id="dCat">Ceramics · Vessel</span>
-        <h2 class="detail-title" id="dTitle">Raku Tea Vessel, Iron-Glazed</h2>
+        <span class="eyebrow detail-eyebrow" id="dCat">Cookware · Skillet</span>
+        <h2 class="detail-title" id="dTitle">Pre-Seasoned Cast Iron Skillet, 12-Inch</h2>
       </div>
 
       <div class="detail-price-row">
-        <div class="detail-price" id="dPrice">$1,840</div>
-        <div class="detail-avail"><span class="dot"></span><span id="dAvail">Edition of 12 · Signed</span></div>
+        <div class="detail-price" id="dPrice">$45</div>
+        <div class="detail-avail"><span class="dot"></span><span id="dAvail">Limited Run · Lifetime Warranty</span></div>
       </div>
 
-      <p class="detail-desc" id="dDesc">
-        A hand-thrown tea vessel finished in a black-iron raku glaze, then wood-fired in the atelier's traditional Anagama kiln over three days. Each piece emerges with a signature that cannot be reproduced — pooled glaze, ember bloom, and the honest asymmetry of the maker's hand.
-      </p>
+      <p class="detail-desc" id="dDesc">A heavy-duty, pre-seasoned cast iron skillet perfect for searing, baking, and frying. Built to last generations and develops a natural non-stick surface with use.</p>
 
-      <div class="detail-specs">
-        <div class="spec-row"><span class="k">Material</span><span class="v">Stoneware · Iron-glazed</span></div>
-        <div class="spec-row"><span class="k">Dimensions</span><span class="v">H 11cm · Ø 9.4cm</span></div>
-        <div class="spec-row"><span class="k">Origin</span><span class="v">Kyōto, Japan</span></div>
-        <div class="spec-row"><span class="k">Made</span><span class="v">2026 · Kōgei Atelier</span></div>
-        <div class="spec-row"><span class="k">Provenance</span><span class="v">Verified · Cert. #KG-0421</span></div>
-      </div>
+      <div class="detail-specs" id="dSpecs"></div>
 
       <div class="detail-actions">
-        <button class="btn btn-primary">
-          Add to cart
-          <span class="arrow">→</span>
+        <button class="btn btn-primary" id="addToCartBtn" onclick="addToCart()">
+          Add to cart <span class="arrow">→</span>
         </button>
         <button class="btn btn-ghost">Save</button>
       </div>
@@ -507,123 +465,115 @@
 
 <script>
   const products = [
-  { 
-    id: 1, 
-    vendor: "Lodge Craft", 
-    vendorInit: "LC", 
-    loc: "Pittsburgh · USA", 
-    region: "americas", 
-    cat: "Cookware · Skillet", 
-    name: "Pre-Seasoned Cast Iron Skillet, 12-Inch", 
-    price: "$45", 
-    avail: "Limited Run · Lifetime Warranty", 
-    badge: "Warranty", 
-    tags: ["warranty"],
-    desc: "A heavy-duty, pre-seasoned cast iron skillet perfect for searing, baking, and frying. Built to last generations and develops a natural non-stick surface with use.",
-    specs: [["Material","Cast Iron"],["Dimensions","H 2.5in · Ø 12in"],["Origin","Pennsylvania, USA"],["Made","2026 · Lodge Craft"],["Provenance","Authentic · Serial #LC-8842"]] 
-  },
-  { 
-    id: 2, 
-    vendor: "Daily Grind Coffee Co.", 
-    vendorInit: "DG", 
-    loc: "Seattle · USA", 
-    region: "americas", 
-    cat: "Drinkware · Mug", 
-    name: "Ceramic Coffee Mug, 16oz", 
-    price: "$18", 
-    avail: "Made to order · 2 weeks", 
-    tags: ["new"],
-    desc: "A sturdy, microwave-safe ceramic mug with an ergonomic handle. Finished in a glossy white glaze, it is the perfect companion for your morning drip coffee.",
-    specs: [["Material","Ceramic · Glossy glaze"],["Dimensions","H 4.5in · Ø 3.5in"],["Origin","Washington, USA"],["Made","2026 · Daily Grind Studio"],["Provenance","Authentic · Serial #DG-1102"]] 
-  },
-  { 
-    id: 3, 
-    vendor: "Apex Kitchen", 
-    vendorInit: "AK", 
-    loc: "Boston · USA", 
-    region: "americas", 
-    cat: "Appliances · Blender", 
-    name: "High-Speed Countertop Blender Set", 
-    price: "$180", 
-    avail: "In stock · 4 remaining", 
-    tags: [],
-    desc: "A powerful 1200-watt motor base paired with two travel cups. Designed for crushing ice, blending smooth smoothies, and making hot soups with ease.",
-    specs: [["Material","Stainless Steel · BPA-Free Plastic"],["Dimensions","H 16in · W 7in"],["Origin","Massachusetts, USA"],["Made","2026 · Apex Labs"],["Provenance","Authentic · Serial #AK-9043"]] 
-  },
-  { 
-    id: 4, 
-    vendor: "Baker's Choice", 
-    vendorInit: "BC", 
-    loc: "Chicago · USA", 
-    region: "americas", 
-    cat: "Bakeware · Pan", 
-    name: "Non-Stick Loaf Pan", 
-    price: "$22", 
-    avail: "In stock · 8 remaining", 
-    tags: ["new"],
-    desc: "A heavy-gauge steel loaf pan coated in a premium non-stick finish. Ensures even heat distribution for perfectly golden banana bread and pound cakes.",
-    specs: [["Material","Aluminized Steel · Non-stick coating"],["Dimensions","H 3in · W 8.5in · L 4.5in"],["Origin","Illinois, USA"],["Made","2026 · Baker's Choice"],["Provenance","Authentic · Serial #BC-0441"]] 
-  },
-  { 
-    id: 5, 
-    vendor: "Lodge Craft", 
-    vendorInit: "LC", 
-    loc: "Pittsburgh · USA", 
-    region: "americas", 
-    cat: "Cookware · Oven", 
-    name: "Enamelled Dutch Oven, 6-Quart", 
-    price: "$120", 
-    avail: "Limited Run · Lifetime Warranty", 
-    badge: "Warranty", 
-    tags: ["warranty"],
-    desc: "A classic enamelled cast iron Dutch oven ideal for braising, stewing, and baking artisan sourdough bread. Features a tight-fitting lid to lock in moisture.",
-    specs: [["Material","Enamelled Cast Iron"],["Dimensions","H 7.2in · Ø 11in"],["Origin","Pennsylvania, USA"],["Made","2026 · Lodge Craft"],["Provenance","Authentic · Serial #LC-8845"]] 
-  },
-  { 
-    id: 6, 
-    vendor: "ClearGlass Co.", 
-    vendorInit: "CG", 
-    loc: "Ohio · USA", 
-    region: "americas", 
-    cat: "Drinkware · Tumbler", 
-    name: "Glass Tumbler Set, Pack of 4", 
-    price: "$28", 
-    avail: "In stock · 12 remaining", 
-    tags: [],
-    desc: "A set of four durable, dishwasher-safe drinking glasses. Perfect for serving water, iced tea, or cocktails. Designed with a heavy base to prevent tipping.",
-    specs: [["Material","Borosilicate Glass"],["Dimensions","H 5.5in · Ø 3in ea."],["Origin","Ohio, USA"],["Made","2026 · ClearGlass Factory"],["Provenance","Authentic · Serial #CG-5501"]] 
-  },
-  { 
-    id: 7, 
-    vendor: "Apex Kitchen", 
-    vendorInit: "AK", 
-    loc: "Boston · USA", 
-    region: "americas", 
-    cat: "Appliances · Air Fryer", 
-    name: "Digital Air Fryer Oven, Large", 
-    price: "$240", 
-    avail: "Limited Run · Lifetime Warranty", 
-    badge: "Warranty", 
-    tags: ["warranty", "new"],
-    desc: "An extra-large capacity digital air fryer that crisps food using up to 85% less oil than traditional deep frying. Features 8 one-touch cooking presets.",
-    specs: [["Material","Stainless Steel · Matte Finish"],["Dimensions","H 14in · W 13in · D 13in"],["Origin","Massachusetts, USA"],["Made","2026 · Apex Labs"],["Provenance","Authentic · Serial #AK-9047"]] 
-  },
-  { 
-    id: 8, 
-    vendor: "Daily Grind Coffee Co.", 
-    vendorInit: "DG", 
-    loc: "Seattle · USA", 
-    region: "americas", 
-    cat: "Coffee · Grinder", 
-    name: "Electric Burr Coffee Grinder", 
-    price: "$95", 
-    avail: "In stock · 6 remaining", 
-    tags: [],
-    desc: "An electric conical burr grinder with 30 precise grind settings, spanning from fine espresso to coarse French press. Preserves coffee bean aroma.",
-    specs: [["Material","Stainless Steel · Acrylic"],["Dimensions","H 11in · W 5in"],["Origin","Washington, USA"],["Made","2026 · Daily Grind Studio"],["Provenance","Authentic · Serial #DG-1105"]] 
-  }
+  { id: 1, vendor: "Lodge Craft", vendorInit: "LC", loc: "Pittsburgh · USA", region: "americas", cat: "Cookware · Skillet", name: "Pre-Seasoned Cast Iron Skillet, 12-Inch", price: "$45", avail: "Limited Run · Lifetime Warranty", badge: "Warranty", tags: ["warranty"], desc: "A heavy-duty, pre-seasoned cast iron skillet perfect for searing, baking, and frying. Built to last generations and develops a natural non-stick surface with use.", specs: [["Material","Cast Iron"],["Dimensions","H 2.5in · Ø 12in"],["Origin","Pennsylvania, USA"],["Made","2026 · Lodge Craft"],["Provenance","Authentic · Serial #LC-8842"]] },
+  { id: 2, vendor: "Daily Grind Coffee Co.", vendorInit: "DG", loc: "Seattle · USA", region: "americas", cat: "Drinkware · Mug", name: "Ceramic Coffee Mug, 16oz", price: "$18", avail: "Made to order · 2 weeks", tags: ["new"], desc: "A sturdy, microwave-safe ceramic mug with an ergonomic handle. Finished in a glossy white glaze, it is the perfect companion for your morning drip coffee.", specs: [["Material","Ceramic · Glossy glaze"],["Dimensions","H 4.5in · Ø 3.5in"],["Origin","Washington, USA"],["Made","2026 · Daily Grind Studio"],["Provenance","Authentic · Serial #DG-1102"]] },
+  { id: 3, vendor: "Apex Kitchen", vendorInit: "AK", loc: "Boston · USA", region: "americas", cat: "Appliances · Blender", name: "High-Speed Countertop Blender Set", price: "$180", avail: "In stock · 4 remaining", tags: [], desc: "A powerful 1200-watt motor base paired with two travel cups. Designed for crushing ice, blending smooth smoothies, and making hot soups with ease.", specs: [["Material","Stainless Steel · BPA-Free Plastic"],["Dimensions","H 16in · W 7in"],["Origin","Massachusetts, USA"],["Made","2026 · Apex Labs"],["Provenance","Authentic · Serial #AK-9043"]] },
+  { id: 4, vendor: "Baker's Choice", vendorInit: "BC", loc: "Chicago · USA", region: "americas", cat: "Bakeware · Pan", name: "Non-Stick Loaf Pan", price: "$22", avail: "In stock · 8 remaining", tags: ["new"], desc: "A heavy-gauge steel loaf pan coated in a premium non-stick finish. Ensures even heat distribution for perfectly golden banana bread and pound cakes.", specs: [["Material","Aluminized Steel · Non-stick coating"],["Dimensions","H 3in · W 8.5in · L 4.5in"],["Origin","Illinois, USA"],["Made","2026 · Baker's Choice"],["Provenance","Authentic · Serial #BC-0441"]] },
+  { id: 5, vendor: "Lodge Craft", vendorInit: "LC", loc: "Pittsburgh · USA", region: "americas", cat: "Cookware · Oven", name: "Enamelled Dutch Oven, 6-Quart", price: "$120", avail: "Limited Run · Lifetime Warranty", badge: "Warranty", tags: ["warranty"], desc: "A classic enamelled cast iron Dutch oven ideal for braising, stewing, and baking artisan sourdough bread. Features a tight-fitting lid to lock in moisture.", specs: [["Material","Enamelled Cast Iron"],["Dimensions","H 7.2in · Ø 11in"],["Origin","Pennsylvania, USA"],["Made","2026 · Lodge Craft"],["Provenance","Authentic · Serial #LC-8845"]] },
+  { id: 6, vendor: "ClearGlass Co.", vendorInit: "CG", loc: "Ohio · USA", region: "americas", cat: "Drinkware · Tumbler", name: "Glass Tumbler Set, Pack of 4", price: "$28", avail: "In stock · 12 remaining", tags: [], desc: "A set of four durable, dishwasher-safe drinking glasses. Perfect for serving water, iced tea, or cocktails. Designed with a heavy base to prevent tipping.", specs: [["Material","Borosilicate Glass"],["Dimensions","H 5.5in · Ø 3in ea."],["Origin","Ohio, USA"],["Made","2026 · ClearGlass Factory"],["Provenance","Authentic · Serial #CG-5501"]] },
+  { id: 7, vendor: "Apex Kitchen", vendorInit: "AK", loc: "Boston · USA", region: "americas", cat: "Appliances · Air Fryer", name: "Digital Air Fryer Oven, Large", price: "$240", avail: "Limited Run · Lifetime Warranty", badge: "Warranty", tags: ["warranty","new"], desc: "An extra-large capacity digital air fryer that crisps food using up to 85% less oil than traditional deep frying. Features 8 one-touch cooking presets.", specs: [["Material","Stainless Steel · Matte Finish"],["Dimensions","H 14in · W 13in · D 13in"],["Origin","Massachusetts, USA"],["Made","2026 · Apex Labs"],["Provenance","Authentic · Serial #AK-9047"]] },
+  { id: 8, vendor: "Daily Grind Coffee Co.", vendorInit: "DG", loc: "Seattle · USA", region: "americas", cat: "Coffee · Grinder", name: "Electric Burr Coffee Grinder", price: "$95", avail: "In stock · 6 remaining", tags: [], desc: "An electric conical burr grinder with 30 precise grind settings, spanning from fine espresso to coarse French press. Preserves coffee bean aroma.", specs: [["Material","Stainless Steel · Acrylic"],["Dimensions","H 11in · W 5in"],["Origin","Washington, USA"],["Made","2026 · Daily Grind Studio"],["Provenance","Authentic · Serial #DG-1105"]] }
 ];
 
+  // ---- CART STATE ----
+  let cart = [];
+
+  function getPrice(p) {
+    return parseFloat(p.price.replace(/[^0-9.]/g, '')) || 0;
+  }
+
+  function addToCart() {
+    const p = products.find(x => x.id === selectedId);
+    if (!p) return;
+    const existing = cart.find(x => x.id === p.id);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ id: p.id, qty: 1 });
+    }
+    updateCartUI();
+    const btn = document.getElementById('addToCartBtn');
+    btn.classList.remove('btn-added');
+    void btn.offsetWidth;
+    btn.classList.add('btn-added');
+    setTimeout(() => btn.classList.remove('btn-added'), 700);
+    openCart();
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(x => x.id !== id);
+    updateCartUI();
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(x => x.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const totalQty = cart.reduce((s, x) => s + x.qty, 0);
+    const totalPrice = cart.reduce((s, x) => {
+      const p = products.find(pr => pr.id === x.id);
+      return s + (p ? getPrice(p) * x.qty : 0);
+    }, 0);
+
+    const badge = document.getElementById('cartBadge');
+    badge.textContent = totalQty;
+    badge.classList.toggle('visible', totalQty > 0);
+
+    document.getElementById('cartHeadCount').textContent = totalQty > 0 ? `(${totalQty})` : '';
+
+    const itemsEl = document.getElementById('cartItems');
+    const emptyEl = document.getElementById('cartEmpty');
+    const footEl  = document.getElementById('cartFoot');
+
+    if (cart.length === 0) {
+      emptyEl.style.display = 'flex';
+      footEl.style.display = 'none';
+      itemsEl.innerHTML = '';
+      itemsEl.appendChild(emptyEl);
+    } else {
+      emptyEl.style.display = 'none';
+      footEl.style.display = 'block';
+      itemsEl.innerHTML = cart.map(item => {
+        const p = products.find(pr => pr.id === item.id);
+        if (!p) return '';
+        const lineTotal = (getPrice(p) * item.qty).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        return `
+          <div class="cart-item">
+            <div class="cart-item-thumb">${p.vendorInit}</div>
+            <div class="cart-item-info">
+              <div class="cart-item-vendor">${p.vendor}</div>
+              <div class="cart-item-name">${p.name}</div>
+              <div class="cart-item-qty">
+                <button class="qty-btn" onclick="changeQty(${p.id}, -1)">−</button>
+                <span class="qty-num">${item.qty}</span>
+                <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
+                <button class="cart-item-remove" onclick="removeFromCart(${p.id})">Remove</button>
+              </div>
+            </div>
+            <div class="cart-item-price">${lineTotal}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('cartTotal').textContent = totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
+  function openCart() {
+    document.getElementById('cartDrawer').classList.add('open');
+    document.getElementById('cartOverlay').classList.add('open');
+  }
+  function closeCart() {
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.getElementById('cartOverlay').classList.remove('open');
+  }
+
+  // ---- SHOP LOGIC ----
   const listing = document.getElementById("products");
   const filters = document.getElementById("filters");
   const countEl = document.getElementById("count");
@@ -672,8 +622,7 @@
     document.getElementById("dAvail").textContent = p.avail;
     document.getElementById("dDesc").textContent = p.desc;
     document.getElementById("mainLabel").textContent = `Product Shot — ${p.name.split(",")[0]}`;
-    const specsHTML = p.specs.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
-    document.querySelector(".detail-specs").innerHTML = specsHTML;
+    document.getElementById("dSpecs").innerHTML = p.specs.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
   }
 
   filters.addEventListener("click", (e) => {
@@ -686,8 +635,8 @@
   });
 
   render();
+  renderDetail();
 
-  // Thumbnail switching (visual only)
   document.querySelector(".detail-thumbs").addEventListener("click", (e) => {
     const t = e.target.closest(".placeholder");
     if (!t) return;
